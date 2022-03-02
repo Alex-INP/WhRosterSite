@@ -1,0 +1,19 @@
+{% extends "users/base.html" %}
+
+{% block content %}
+
+HELLO
+{% for i in object_list %}
+<div>{{ i }}</div>
+<div>{{ i.user }}</div>
+<div>{{ i.user.pk }}</div>
+<div>{{ i.description }}</div>
+{% endfor %}
+<div>{{ object_list.roster.name }}</div>
+<div>{{ object_list.roster }}</div>
+<div>{{ object_list.units }}</div>
+{% for i in object_list.units %}
+<div>{{ i.unit.name }}</div>
+
+{% endfor %}
+{% endblock %}

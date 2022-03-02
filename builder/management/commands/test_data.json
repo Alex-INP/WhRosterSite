@@ -1,0 +1,336 @@
+{
+  "codex_faction_data": [
+    {
+      "id": 1,
+      "name": "Adeptus Mechanicus"
+    }
+  ],
+  "battlefield_role_data": [
+    {
+      "id": 1,
+      "name": "Troops"
+    },
+    {
+      "id": 2,
+      "name": "Dedicated Transport"
+    }
+  ],
+  "weapon_data": [
+    {
+      "id": 1,
+      "name": "Cognis flamer (Kataphron Destroyers)",
+      "price": 5
+    },
+    {
+      "id": 2,
+      "name": "Heavy grav-cannon",
+      "price": 0
+    },
+    {
+      "id": 3,
+      "name": "Kataphron plasma culverin (Kataphron Destroyers)",
+      "price": 10
+    },
+    {
+      "id": 4,
+      "name": "Cognis heavy stubber",
+      "price": 0
+    },
+    {
+      "id": 5,
+      "name": "Twin cognis heavy stubber",
+      "price": 0
+    },
+    {
+      "id": 6,
+      "name": "Phosphor blaster",
+      "price": 0
+    }
+  ],
+  "weapon_profile_data": [
+    {
+      "id": 1,
+      "name": "single",
+      "weapon_range": "12",
+      "weapon_type": "Assault D6 + 2",
+      "strength": "4",
+      "armor_penetration": "0",
+      "damage": "1",
+      "abilities": "Each time an attack is made with this weapon, that attack automatically hits the target",
+      "weapon": 1
+    },
+    {
+      "id": 2,
+      "name": "single",
+      "weapon_range": "30",
+      "weapon_type": "Heavy-5",
+      "strength": "5",
+      "armor_penetration": "3",
+      "damage": "1",
+      "abilities": "Each time an attack made with this weapon is allocated to a model with a Save characteristic of 3+ or better, that attack has a Damage characteristic of 2.",
+      "weapon": 2
+    },
+    {
+      "id": 3,
+      "name": "Standard",
+      "weapon_range": "36",
+      "weapon_type": "Heavy D6",
+      "strength": "7",
+      "armor_penetration": "3",
+      "damage": "1",
+      "abilities": "Blast",
+      "weapon": 3
+    },
+    {
+      "id": 4,
+      "name": "Supercharge",
+      "weapon_range": "36",
+      "weapon_type": "Heavy D6",
+      "strength": "8",
+      "armor_penetration": "3",
+      "damage": "2",
+      "abilities": "Blast. Each time an unmodified hit roll of 1 is made for an attack with this weapon profile, the bearer’s unit suffers 1 mortal wound after shooting with this weapon.",
+      "weapon": 3
+    },
+    {
+      "id": 5,
+      "name": "single",
+      "weapon_range": "36",
+      "weapon_type": "Assault 4",
+      "strength": "4",
+      "armor_penetration": "0",
+      "damage": "1",
+      "abilities": "",
+      "weapon": 4
+    },
+    {
+      "id": 6,
+      "name": "single",
+      "weapon_range": "36",
+      "weapon_type": "Assault 8",
+      "strength": "4",
+      "armor_penetration": "0",
+      "damage": "1",
+      "abilities": "",
+      "weapon": 5
+    },
+    {
+      "id": 7,
+      "name": "single",
+      "weapon_range": "24",
+      "weapon_type": "Rapid Fire 1",
+      "strength": "5",
+      "armor_penetration": "1",
+      "damage": "1",
+      "abilities": "Each time an attack is made with this weapon, the target does not receive the benefits of Dense Cover against that attack.",
+      "weapon": 6
+    }
+  ],
+  "ability_data": [
+    {
+      "id": 1,
+      "name": "Canticles of the Omnissiah",
+      "description": "Description in codex."
+    },
+    {
+      "id": 2,
+      "name": "Tracked Mobility",
+      "description": "Models in this unit can move through the walls, girders, chains and foliage of terrain features with the Breachable terrain trait without impediment."
+    },
+    {
+      "id": 3,
+      "name": "Bionics",
+      "description": "Models in this unit have a 6+ invulnerable save."
+    },
+    {
+      "id": 4,
+      "name": "Doctrina Imperatives",
+      "description": "Description in codex."
+    },
+    {
+      "id": 5,
+      "name": "Explodes",
+      "description": "When this transport is destroyed, roll one D6 before any embarked models disembark and before removing it from play. On a 6 it explodes, and each unit within 6\" suffers D3 mortal wounds."
+    },
+    {
+      "id": 6,
+      "name": "Broad Spectrum Data-tether",
+      "description": "In your Command phase, select one friendly <FORGE WORLD> SKITARII CORE unit within 6\" of this unit. Until the start of your next Command phase, add 1 to the Leadership characteristic of models in that unit and that unit gains the DATA-TETHER keyword."
+    }
+  ],
+  "keyword_data": [
+    {
+      "id": 1,
+      "name": "BIKER"
+    },
+    {
+      "id": 2,
+      "name": "KATAPHRON SERVITORS"
+    },
+    {
+      "id": 3,
+      "name": "KATAPHRON DESTROYERS"
+    },
+    {
+      "id": 4,
+      "name": "VEHICLE"
+    },
+    {
+      "id": 5,
+      "name": "TRANSPORT"
+    },
+    {
+      "id": 6,
+      "name": "DATA-TETHER"
+    },
+    {
+      "id": 7,
+      "name": "SKORPIUS ENGINE"
+    },
+    {
+      "id": 8,
+      "name": "SKORPIUS DUNERIDER"
+    }
+  ],
+  "faction_keyword_data": [
+    {
+      "id": 1,
+      "name": "IMPERIUM"
+    },
+    {
+      "id": 2,
+      "name": "ADEPTUS MECHANICUS"
+    },
+    {
+      "id": 3,
+      "name": "CULT MECHANICUS"
+    },
+    {
+      "id": 4,
+      "name": "<FORGE WORLD>"
+    },
+    {
+      "id": 5,
+      "name": "SKITARII"
+    }
+  ],
+  "unit_data": [
+    {
+      "id": 1,
+      "name": "Kataphron Destroyers",
+      "codex_faction": 1,
+      "wargear_options": "Any number of models can each have their heavy grav-cannon replaced with 1 Kataphron plasma culverin.\nAny number of models can each have their phosphor blaster replaced with 1 cognis flamer.",
+      "description": "If this unit contains 4 or more models, it has Power Rating 14. Every model is equipped with: heavy grav-cannon; phosphor blaster.",
+      "power_rating": 7,
+      "picture_search_link": "https://www.google.com/search?tbm=isch&q=Warhammer%2040000%20Adeptus%20Mechanicus%20Kataphron%20Destroyers%20miniature",
+      "transport": ""
+    },
+    {
+      "id": 2,
+      "name": "Skorpius Dunerider",
+      "codex_faction": 1,
+      "wargear_options": "",
+      "description": "A Skorpius Dunerider is equipped with: 2 cognis heavy stubbers; twin cognis heavy stubber.",
+      "power_rating": 5,
+      "picture_search_link": "https://www.google.com/search?tbm=isch&q=Warhammer%2040000%20Adeptus%20Mechanicus%20Skorpius%20Dunerider%20miniature",
+      "transport": "This model has a transport capacity of 12 <FORGE WORLD> INFANTRY models."
+    }
+  ],
+  "unit_model_data": [
+    {
+      "id": 1,
+      "name": "Kataphron Destroyer",
+      "price": 40
+    },
+    {
+      "id": 2,
+      "name": "Skorpius Dunerider",
+      "price": 95
+    }
+  ],
+  "unit_model_profile_data": [
+    {
+      "id": 1,
+      "movement": "6",
+      "weapon_skill": 4,
+      "ballistic_skill": 4,
+      "strength": "5",
+      "toughness": "5",
+      "wounds": "3",
+      "attacks": "3",
+      "leadership": 7,
+      "saving_throw": 3,
+      "base": "60",
+      "unit_model": 1
+    },
+    {
+      "id": 2,
+      "position": 1,
+      "movement": "12",
+      "weapon_skill": 6,
+      "ballistic_skill": 3,
+      "strength": "6",
+      "toughness": "6",
+      "wounds": "7-12",
+      "attacks": "3",
+      "leadership": 8,
+      "saving_throw": 3,
+      "base": "Use model",
+      "unit_model": 2
+    },
+    {
+      "id": 3,
+      "position": 2,
+      "movement": "9",
+      "weapon_skill": 6,
+      "ballistic_skill": 4,
+      "strength": "6",
+      "toughness": "6",
+      "wounds": "4-6",
+      "attacks": "D3",
+      "leadership": 8,
+      "saving_throw": 3,
+      "base": "Use model",
+      "unit_model": 2
+    },
+    {
+      "id": 4,
+      "position": 3,
+      "movement": "6",
+      "weapon_skill": 6,
+      "ballistic_skill": 3,
+      "strength": "6",
+      "toughness": "6",
+      "wounds": "1-3",
+      "attacks": "1",
+      "leadership": 8,
+      "saving_throw": 3,
+      "base": "Use model",
+      "unit_model": 2
+    }
+  ],
+  "roster_data": [
+    {
+      "id": 1,
+      "name": "some roster name",
+      "user": 1,
+      "description": "some roster description"
+    }
+  ],
+  "unit_count_restriction_data": [
+    {
+      "id": 1,
+      "unit": 1,
+      "unit_model": 1,
+      "minimum_count": 3,
+      "maximum_count": 6
+    },
+    {
+      "id": 2,
+      "unit": 2,
+      "unit_model": 2,
+      "minimum_count": 1,
+      "maximum_count": 1
+    }
+  ]
+}
