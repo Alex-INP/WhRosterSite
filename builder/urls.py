@@ -16,10 +16,15 @@ Including another URLconf
 
 from django.urls import path
 
-from .views import BuilderListView
+from .views import WorkboardView, RosterListView, DisplayRosterListView, FactionUnitsListView, CreateRosterView
 
 app_name = "builder"
 
 urlpatterns = [
-    path("", BuilderListView.as_view(), name="user"),
+    path("<int:pk>", WorkboardView.as_view(), name="workboard"),
+    path("roster_list/", RosterListView.as_view(), name="roster_list"),
+    path("display_roster/<int:pk>", DisplayRosterListView.as_view(), name="display_roster"),
+    path("units_list/", FactionUnitsListView.as_view(), name="units_list"),
+    path("units_list/<int:pk>", FactionUnitsListView.as_view(), name="units_list"),
+    path("roster_create/", CreateRosterView.as_view(), name="roster_create")
 ]

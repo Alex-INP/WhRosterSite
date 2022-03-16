@@ -1,0 +1,93 @@
+{% extends "users/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="m-3">
+    <div>
+        <div>Roster name: {{ roster.name }}</div>
+        <div>Roster description: {{ roster.description }}</div>
+        <div class="roster_cost" value="{{ roster.total_cost }}">Roster points: {{ roster.total_cost }}</div>
+        <div class="roster_max_cost" value="{{ roster.max_cost }}">Roster max points: {{ roster.max_cost }}</div>
+        <div class="points_left">Points left: </div>
+        --------------------------------------------------------
+    </div>
+    <div>
+        <div>
+            <table class="table table-bordered table-sm">
+                <thead class="thead-dark">
+                    <tr  class="text-center">
+                        <th>Name</th>
+                        <th>Command cost</th>
+                        <th>Main_restrictions</th>
+                        <th>Command_benefits</th>
+                        <th>Dedicated transport</th>
+                        <th>HQ</th>
+                        <th>Troops</th>
+                        <th>Elites</th>
+                        <th>Fast attack</th>
+                        <th>Flyers</th>
+                        <th>Heavy support</th>
+                        <th>Lords of war</th>
+                    </tr>
+                </thead>
+                {% for detach in detachments %}
+                    <tr>
+                        <td>{{ detach.name }}</td>
+                        <td  class="text-center">{{ detach.command_cost }}</td>
+                        <td>{{ detach.main_restrictions }}</td>
+                        <td>{{ detach.command_benefits }}</td>
+                        <td>{{ detach.transport_restriction }}</td>
+                        <td  class="text-center hq_restr">{{ detach.hq_restriction }}</td>
+                        <td  class="text-center troops_restr">{{ detach.troops_restriction }}</td>
+                        <td  class="text-center elites_restr">{{ detach.elites_restriction }}</td>
+                        <td  class="text-center f_attack_restr">{{ detach.fast_attack_restriction }}</td>
+                        <td  class="text-center flyers_restr">{{ detach.flyers_restriction }}</td>
+                        <td  class="text-center h_support_restr">{{ detach.heavy_support_restriction }}</td>
+                        <td  class="text-center l_o_w_restr">{{ detach.lords_of_war_restriction }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="d-flex justify-content-center">
+            <div>
+                <div class="text-center"><h5>Total detachment restrictions</h5></div>
+                <table class="table-bordered table-sm">
+                    <thead class="thead-dark">
+                        <tr class="text-center">
+                            <th>HQ</th>
+                            <th>Troops</th>
+                            <th>Elites</th>
+                            <th>Fast attack</th>
+                            <th>Flyers</th>
+                            <th>Heavy support</th>
+                            <th>Lords of war</th>
+                        </tr>
+                    </thead>
+                    <tr class="text-center">
+                        <th class="result_hq"></th>
+                        <th class="result_troops"></th>
+                        <th class="result_elites"></th>
+                        <th class="result_f_attack"></th>
+                        <th class="result_flyers"></th>
+                        <th class="result_h_support"></th>
+                        <th class="result_l_o_w"></th>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <div>
+        {% for unit_entry in units_list%}
+        --------------------------------------------------------
+            <div>Unit name: {{ unit_entry.unit.name }}</div>
+        --------------------------------------------------------
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_scripts %}
+<script src="{% static 'js/display.js' %}"></script>
+{% endblock %}

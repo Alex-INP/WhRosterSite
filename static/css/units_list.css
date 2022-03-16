@@ -1,0 +1,39 @@
+.units_wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+}
+.unit_card {
+    border: 2px solid black;
+    width: 500px;
+    margin: 20px;
+}
+.role {
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    text-align: center;
+}
+.unit_field{
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+.field_name {
+    font-weight: bold;
+}
+.card_header {
+    font-size: 20px;
+    font-style: italic;
+}
+.faction_links_wrapper {
+    display: flex;
+    justify-content: center;
+    justify-content: space-around;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.faction_link {
+    font-size: 25px;
+    color: black;
+    text-decoration: none;
+}

@@ -1,0 +1,40 @@
+{% extends "users/base.html" %}
+{% load static %}
+
+{% block additional_styles %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <div class="row">
+        <form action="{% url 'builder:roster_create' %}" method="post">
+            {% csrf_token %}
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <label class="form-label" for="{{ form.name.id_for_label }}">Roster name</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="col">
+                        <label class="form-label" for="{{ form.max_cost.id_for_label }}">Max points</label>
+                        {{ form.max_cost }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="form-label" for="{{ form.description.id_for_label }}">Description</label>
+                        {{ form.description }}
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center mt-2">
+                    <input class="btn btn-primary btn-lg" type="submit" value="Create">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block additional_scripts %}
+{% endblock %}

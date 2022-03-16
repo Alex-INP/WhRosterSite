@@ -1,0 +1,56 @@
+{% extends "users/base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row border border-2 border-secondary">
+        <div class="col-3 border d-flex justify-content-center">
+            <div class="m-3 align-text-center"><b>User:</b> {{ user.username }}</div>
+        </div>
+        <div class="col border d-flex justify-content-center">
+            <div class="m-3 align-text-center"><b>Statistics:</b> Total rosters: {{ rosters.count }}</div>
+        </div>
+        <div class="col-3 d-flex justify-content-around align-items-center">
+            <div>
+                <a type="button" class="col me-3 align-self-center btn btn-primary" href="{% url 'builder:roster_create' %}">Create roster</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="d-flex justify-content-around m-3 flex-wrap">
+    {% for roster in rosters %}
+        <div class="border border-4 border-dark mw-50 rounded">
+            <div class="p-2">
+                <div><b>Name:</b> <a style="text-decoration: none;" href="{% url 'builder:display_roster' roster.pk %}">{{ roster.name }}</a></div>
+                <div>
+                    <b>Factions:</b>
+                    {% if roster.factions.all %}
+                        {% for faction in roster.factions.all %}
+                            {% if forloop.last %}
+                                {{ faction.name }}.
+                            {{ else }}
+                                {{ faction.name }},
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+                <div><b>Description:</b> {{ roster.description }}</div>
+                <div><b>Points:</b> {{ roster.total_cost }}/{{ roster.max_cost }}</div>
+                <div><b>Privacy:</b> {% if roster.private %}Private{% else %}Public{% endif %}</div>
+            </div>
+            <div class="border-top d-flex p-1 justify-content-around">
+                <div class="p-1">
+                    <a type="button" class="col btn btn-primary" href="{% url 'builder:workboard' roster.pk %}">Edit roster</a>
+                </div>
+                <div class="p-1">
+                    <a type="button" class="col btn btn-primary" href="">Delete roster</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

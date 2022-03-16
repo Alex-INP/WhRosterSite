@@ -3,17 +3,25 @@
 {% block content %}
 
 HELLO
-{% for i in object_list %}
-<div>{{ i }}</div>
-<div>{{ i.user }}</div>
-<div>{{ i.user.pk }}</div>
-<div>{{ i.description }}</div>
-{% endfor %}
-<div>{{ object_list.roster.name }}</div>
-<div>{{ object_list.roster }}</div>
-<div>{{ object_list.units }}</div>
-{% for i in object_list.units %}
-<div>{{ i.unit.name }}</div>
+<div>{{ user.pk }}</div>
+<div>Username: {{ user.username }}</div>
+----------------------------------
 
+<div>{{ object_list.roster.pk }}</div>
+<div>Roster name: {{ object_list.roster.name }}</div>
+<div>Roster description: {{ object_list.roster.description }}</div>
+
+----------------------------------
+<h3>Roster units.</h3>
+<!-- не верно сделан цикл, убрать дублирование информации -->
+{% for unit_entry in object_list.unit_entries %}
+<div>
+    <h4>Unit name: {{ unit_entry.unit.name }}</h4>
+    <div><b>Models.</b></div>
+    <div>Model name: {{ unit_entry.unit_model.name }} </div>
+    <div>Model count restrictions: {{ unit_entry.get_restrictions }}</div>
+    <div>Model count: {{ unit_entry.model_count }}</div>
+    ---------------------------------------------------
+</div>
 {% endfor %}
 {% endblock %}

@@ -1,0 +1,55 @@
+{% extends "users/base.html" %}
+{% load static %}
+{% load custom_tags %}
+
+{% block additional_styles %}
+    <link rel="stylesheet" href="{% static 'css/units_list.css' %}"/>
+{% endblock %}
+
+{% block content %}
+<div>
+    <div class="faction_links_wrapper">
+        {% for faction in factions %}
+            <a class="faction_link" href="{% url 'builder:units_list' faction.pk %}">{{ faction.name }}</a>
+        {% endfor %}
+    </div>
+    {% for b_role, unit_data in all_units.items %}
+        {% if unit_data %}
+            <h3 class="role">{{ b_role|replace_with_space:"_" }}</h3>
+            <div class="units_wrapper">
+            {% for element in unit_data %}
+                <div class="unit_card">
+                    <div class="card_header">Unit</div>
+                    <div class="unit_field"><span class="field_name">Unit name:</span>  {{ element.unit.name }}</div>
+                    <div class="unit_field"><span class="field_name">Unit battlefield role:</span> {{ element.unit.battlefield_role.name }}</div>
+                    <div class="unit_field"><span class="field_name">Unit description:</span> {{ element.unit.description }}</div>
+                    <div class="card_header">Models</div>
+                    {% for restriction in element.model_restrictions %}
+                        <div class="unit_field"><span class="field_name">Model name:</span> {{ restriction.unit_model.name }}</div>
+                        <div class="unit_field"><span class="field_name">Price:</span> {{ restriction.unit_model.price }}</div>
+                        <div class="unit_field"><span class="field_name">Count restrictions:</span> {{ restriction.minimum_count }}-{{ restriction.maximum_count }}</div>
+                        {% for profile in restriction.unit_model.get_profiles %}
+                            <div>
+                                M - {{ profile.movement }}"|
+                                WS - {{ profile.weapon_skill }}|
+                                BS - {{ profile.ballistic_skill }}|
+                                S - {{ profile.strength }}|
+                                T - {{ profile.toughness }}|
+                                W - {{ profile.wounds }}|
+                                A - {{ profile.attacks }}|
+                                Ld - {{ profile.leadership }}|
+                                Sv - {{ profile.saving_throw }}+|
+                                Base - {{ profile.base }}|
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block additional_scripts %}
+{% endblock %}

@@ -53,7 +53,9 @@ class Command(BaseCommand):
 
 
 		NormalUser.objects.create_superuser("Admin", "admin@mail.ru", "admin")
-		NormalUser(**{"id": 1, "username": "Alex", "password": "Q1wertyu", "email": "asdasd@mail.ru"}).save()
+		user_one = NormalUser(**{"username": "Alex", "email": "asdasd@mail.ru"})
+		user_one.set_password("Q1wertyu")
+		user_one.save()
 
 		for codex_faction in file_content["codex_faction_data"]:
 			builder_models.CodexFaction(**codex_faction).save()
@@ -89,7 +91,8 @@ class Command(BaseCommand):
 			builder_models.UnitModelProfile(**unit_model_profile).save()
 
 		for roster in file_content["roster_data"]:
-			user = NormalUser.objects.get(pk=roster["user"])
+			# user = NormalUser.objects.get(pk=roster["user"])
+			user = NormalUser.objects.get(pk=user_one.pk)
 			builder_models.Roster(roster["id"], roster["name"], user.pk, roster["description"]).save()
 
 		for unit_count in file_content["unit_count_restriction_data"]:
@@ -121,13 +124,13 @@ class Command(BaseCommand):
 		unit_model_2 = builder_models.UnitsCountRestrictions.objects.get(unit=unit_2.pk).unit_model
 
 		roster_unit_1_1 = builder_models.UnitsInRosters(1, roster.pk, unit_1.pk, unit_model_1.pk, 3).save()
-		roster_unit_1_2 = builder_models.UnitsInRosters(1, roster.pk, unit_1.pk, unit_model_1.pk, 4).save()
-		roster_unit_2_1 = builder_models.UnitsInRosters(2, roster.pk, unit_2.pk, unit_model_2.pk, 1).save()
+		roster_unit_1_2 = builder_models.UnitsInRosters(2, roster.pk, unit_1.pk, unit_model_1.pk, 4).save()
+		roster_unit_2_1 = builder_models.UnitsInRosters(3, roster.pk, unit_2.pk, unit_model_2.pk, 1).save()
 
 		builder_models.WeaponInRosterUnits(1, roster_unit_1_1, builder_models.Weapon.objects.get(pk=1), 3)
-		builder_models.WeaponInRosterUnits(1, roster_unit_1_1, builder_models.Weapon.objects.get(pk=2), 3)
-		builder_models.WeaponInRosterUnits(1, roster_unit_1_2, builder_models.Weapon.objects.get(pk=2), 4)
-		builder_models.WeaponInRosterUnits(1, roster_unit_2_1, builder_models.Weapon.objects.get(pk=5), 1)
+		builder_models.WeaponInRosterUnits(2, roster_unit_1_1, builder_models.Weapon.objects.get(pk=2), 3)
+		builder_models.WeaponInRosterUnits(3, roster_unit_1_2, builder_models.Weapon.objects.get(pk=2), 4)
+		builder_models.WeaponInRosterUnits(4, roster_unit_2_1, builder_models.Weapon.objects.get(pk=5), 1)
 
 
 

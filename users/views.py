@@ -60,11 +60,6 @@ class UserRegisterView(CreateView):
 	def get_success_url(self):
 		return reverse_lazy("users:profile")
 
-	# def post(self, request, *args, **kwargs):
-	# 	form = self.form_class(data=request.POST, instance=request.user)
-	# 	if form.is_valid():
-	# 		form.save()
-	# 		return HttpResponseRedirect(reverse("users:profile"))
 
 
 def logout(request):
