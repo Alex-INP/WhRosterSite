@@ -29,7 +29,7 @@ def extract_models(unit_dict):
                 all_models.append(
                     {
                         "model": restr.unit_model,
-                        "profiles": UnitModelProfile.objects.filter(unit_model=restr.unit_model),
+                        "profiles": sorted(UnitModelProfile.objects.filter(unit_model=restr.unit_model), key=lambda el: el.position),
                         "count": model["model_count"],
                         "count_restrictions": {"min": restr.minimum_count, "max": restr.maximum_count}
                     }
@@ -202,7 +202,7 @@ class DisplayRosterListView(ListView):
             {
                 "roster": roster,
                 "detachments": context["detachment_data"],
-                "units_list": context["main_data"]
+                "units_list": sorted(context["main_data"], key=lambda x: x["position_number"])
             }
         )
 

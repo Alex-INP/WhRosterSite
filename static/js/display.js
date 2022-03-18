@@ -21,8 +21,6 @@ function calc_detachment_restrictions() {
 
         let min = 0
         let max = 0
-        console.log(min)
-        console.log("---")
         for (let restr_el of all_restr_els) {
             let el_txt = restr_el.textContent
 
@@ -33,12 +31,48 @@ function calc_detachment_restrictions() {
 
         result_el.textContent = `${min}-${max}`
         }
-
     }
+}
 
+function calc_unit_cost(unit_el){
+    let result_cost = 0
+    let target_el = unit_el.querySelector(".unit_total_cost")
+    let all_model_els = unit_el.querySelectorAll(".model_element")
+    let all_weapon_els = unit_el.querySelectorAll(".w_element")
+    let all_ability_els = unit_el.querySelectorAll(".ability_element")
+    let all_wargear_els = unit_el.querySelectorAll(".wargear_element")
+
+    for (let model of all_model_els) {
+        let price = parseInt(model.querySelector(".m_price").textContent)
+        let count = parseInt(model.querySelector(".m_count").textContent)
+        result_cost += price * count
+    }
+    for (let weap of all_weapon_els) {
+        let price = parseInt(weap.querySelector(".w_price").textContent)
+        let count = parseInt(weap.querySelector(".w_count").textContent)
+        result_cost += price * count
+    }
+    for (let abil of all_ability_els) {
+        let price = abil.querySelector(".a_price")
+        if (price != null) {
+            console.log(price.textContent)
+            result_cost += parseInt(price.textContent)
+        }
+    }
+    for (let warg of all_wargear_els) {
+        let price = warg.querySelector(".war_price")
+        if (price != null) {
+            result_cost += parseInt(price.textContent)
+        }
+    }
+    target_el.textContent = result_cost
 }
 
 window.onload = function(){
     calc_points_left()
     calc_detachment_restrictions()
+
+    for (let unit_el of document.querySelectorAll(".unit_element")) {
+        calc_unit_cost(unit_el)
+    }
 }

@@ -26,9 +26,9 @@ class Command(BaseCommand):
 						],
 					"abilities":
 						[
-							# {"ability_pk": 1, "bought": True},
-							# {"ability_pk": 2, "bought": True},
-							# {"ability_pk": 3, "bought": True},
+							{"ability_pk": 1, "bought": True},
+							{"ability_pk": 2, "bought": True},
+							{"ability_pk": 3, "bought": True},
 							# {"ability_pk": 4, "bought": True},
 							# {"ability_pk": 5, "bought": True},
 							# {"ability_pk": 6, "bought": True},
@@ -63,6 +63,35 @@ class Command(BaseCommand):
 						[
 							{"wargear_pk": 1, "wargear_count": 1},
 							{"wargear_pk": 2, "wargear_count": 1}
+						]
+				},
+				{
+					"position_number": 3,
+					"unit_pk": 9,
+					"models":
+						[
+							{"model_pk": 9, "model_count": 3},
+							{"model_pk": 10, "model_count": 1}
+						],
+					"weapons":
+						[
+							{"weapon_pk": 27, "weapon_count": 3},
+							{"weapon_pk": 31, "weapon_count":2},
+						],
+					"abilities":
+						[
+							# {"ability_pk": 1, "bought": True},
+							# {"ability_pk": 2, "bought": True},
+							# {"ability_pk": 3, "bought": True},
+							# {"ability_pk": 4, "bought": True},
+							# {"ability_pk": 5, "bought": True},
+							# {"ability_pk": 6, "bought": True},
+							{"ability_pk": 21, "bought": True},
+						],
+					"other_wargear":
+						[
+							{"wargear_pk": 1, "wargear_count": 1},
+							{"wargear_pk": 2, "wargear_count": 3}
 						]
 				}
 			]

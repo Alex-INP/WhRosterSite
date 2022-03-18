@@ -1,0 +1,34 @@
+.p-rating {
+    font-size: 12px;
+}
+
+.count_stl {
+    color: rgb(21, 141, 0);
+    font-weight: bold;
+}
+
+.model_cost {
+    color: rgb(13, 39, 145);
+    font-weight: bolder;
+    font-size: 22px;
+}
+
+.count_info {
+    font-size: 25px;
+}
+
+.model_bgr {
+    background-color: rgb(210, 210, 210);
+}
+
+.small_table_font {
+    font-size: 12px;
+}
+
+.link_underline {
+    text-decoration: none;
+}
+
+.ability_field {
+    text-align: start
+}

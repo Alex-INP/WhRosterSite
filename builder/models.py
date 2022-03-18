@@ -40,7 +40,7 @@ class WeaponProfile(models.Model):
 class Ability(models.Model):
 	name = models.CharField("ability name", max_length=250)
 	description = models.TextField("description")
-	price = models.CharField("price",max_length=50, default="0")
+	price = models.CharField("price", max_length=50, default="0")
 
 
 class Keyword(models.Model):
