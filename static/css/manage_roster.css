@@ -26,6 +26,7 @@
     background-color: white;
     left: 0px;
     display: none;
+    z-index: 1;
 }
 
 .dock_side_unit_menu {

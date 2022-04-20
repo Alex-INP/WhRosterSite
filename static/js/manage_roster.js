@@ -215,6 +215,7 @@ $(".observe_unit").click(function(){
 let unit_choose_hide = true
 $(".new_roster_unit_btn").click(function(){
         let unit_choose_el = $(".unit_choose_wrapper")
+        let docked_menu = $(".dock_side_unit_menu")
         if(unit_choose_hide == true){
             unit_choose_el.show()
             unit_choose_hide = false
@@ -339,6 +340,7 @@ delete_unit_btn.click(function(){
     unit_to_delete_el.remove()
     }
 )
+
 for(let el of $(".unit_element")){
     change_unit_signature(el, "up")
 }
@@ -348,17 +350,27 @@ function change_unit_signature(jquery_unit_el, command){
     let target_position = target.attr("position")
     let target_name = target.attr("name")
     let target_delete_button = $("" + `[related_unit_id="${target_id}"]`)
-    let target_anchors = $("#" + target_id)
+    let target_anchors = $(`[href='#${target_id}']`)
+    let new_position
     if(command == "up") {
-        let new_position = parseInt(target_position) + 1
+        new_position = parseInt(target_position) + 1
     } else if(command == "down") {
-        let new_position = parseInt(target_position) - 1
+        new_position = parseInt(target_position) - 1
     }
     let new_id = `${new_position}/${target_name}`
+
     target_delete_button.attr("related_unit_id", new_id)
     target.attr("id", new_id)
     target.attr("position", new_position)
-    for(let anchor of target_anchors) {
-        anchor.attr("href", "#" + new_id)
+
+    let double = true
+    let anchors_len = target_anchors.length
+    for(let anchor of $(target_anchors)) {
+        if(double == true && anchors_len != 2){
+            double = false
+            continue
+        }
+        $(anchor).attr("href", `#${new_id}`)
+        double = true
     }
 }
