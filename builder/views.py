@@ -4,8 +4,10 @@ from itertools import chain
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView, CreateView
+from django.http import JsonResponse
 from django.db.models import Q
 from django.db import connection
 
@@ -13,6 +15,71 @@ from .models import Roster, Unit, UnitModel, UnitsCountRestrictions, CodexFactio
     UnitModelProfile, WeaponProfile, Detachment
 from .forms import NewRosterForm
 from users.models import NormalUser
+
+
+def get_all_units_data(faction_id):
+    all_units = Unit.objects.filter(codex_faction=faction_id)
+    final_data = []
+    for unit in all_units:
+        result = {
+            "unit": unit,
+            "models": None,
+            "weapons": None,
+            "abilities": None,
+            "other_wargear": None,
+        }
+
+        restrictions = UnitsCountRestrictions.objects.select_related("unit").select_related("unit_model").filter(
+            unit=unit.pk)
+        all_models = []
+        for restr in restrictions:
+            all_models.append(
+                {
+                    "model": restr.unit_model,
+                    "profiles": sorted(UnitModelProfile.objects.filter(unit_model=restr.unit_model),
+                                       key=lambda el: el.position),
+                    "count": 0,
+                    "count_restrictions": {"min": restr.minimum_count, "max": restr.maximum_count}
+                }
+            )
+        result["models"] = all_models
+
+        all_weapons = []
+        weapons = Weapon.objects.filter(u_weapon=unit)
+        for weapon in weapons:
+                all_weapons.append(
+                    {
+                        "weapon": weapon,
+                        "profiles": WeaponProfile.objects.filter(weapon=weapon),
+                        "count": 0,
+                    }
+                )
+        result["weapons"] = all_weapons
+
+        all_abilities = []
+        abilities = unit.abilities.all()
+        for ability in abilities:
+            all_abilities.append(
+                {
+                    "ability": ability,
+                    "bought": True
+                }
+            )
+        result["abilities"] = all_abilities
+
+        all_wargear = []
+        wargear = unit.other_wargear.all()
+        for wgr in wargear:
+            all_wargear.append(
+                {
+                    "wargear": wgr,
+                    "count": 0
+                }
+            )
+        result["other_wargear"] = all_wargear
+
+        final_data.append(result)
+    return final_data
 
 
 def unpack_roster_data(roster):
@@ -102,7 +169,6 @@ def get_roster_context(roster):
 
         unit_obj = Unit.objects \
             .select_related("codex_faction") \
-            .select_related("codex_faction") \
             .get(pk=unit["unit_pk"])
 
         result["unit"] = unit_obj
@@ -113,7 +179,7 @@ def get_roster_context(roster):
 
         final_data["main_data"].append(result)
     from pprint import pprint
-    pprint(final_data, sort_dicts=False)
+    # pprint(final_data, sort_dicts=False)
 
     return final_data
 
@@ -205,6 +271,30 @@ class DisplayRosterListView(ListView):
                 "units_list": sorted(context["main_data"], key=lambda x: x["position_number"])
             }
         )
+
+class ManageRosterListView(ListView):
+    template_name = "builder/manage_roster.html"
+
+    def get(self, request, *args, **kwargs):
+        roster = Roster.objects.get(pk=kwargs["pk"])
+        context = get_roster_context(roster)
+        return render(
+            request,
+            self.template_name,
+            {
+                "all_faction_units": get_all_units_data(1), #Unit.objects.filter(codex_faction=1),
+                "roster": roster,
+                "detachments": context["detachment_data"],
+                "units_list": sorted(context["main_data"], key=lambda x: x["position_number"]),
+                "all_detachments": Detachment.objects.all(),
+                'data': json.dumps({"data_1": 33, "data_2": "mydata"})
+            }
+        )
+
+class ManageRosterAJAXView(View):
+    def get(self, request, *args, **kwargs):
+        faction_units = Unit.objects.filter(faction=kwargs["pk"])
+        return JsonResponse({"1": 1})
 
 
 class CreateRosterView(CreateView):

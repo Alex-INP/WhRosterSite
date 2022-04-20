@@ -1,0 +1,1314 @@
+{% extends "users/base.html" %}
+{% load static %}
+
+{% block additional_styles %}
+    <link rel="stylesheet" href="{% static 'css/display_roster.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/manage_roster.css' %}"/>
+{% endblock %}
+
+{% block content %}
+
+
+<div class="roster_id" style="display: none;">{% for faction in roster.factions.all %}<span class="faction_id">{{ faction.id }}</span>{% endfor %}</div>
+<div class="m-3">
+    <div class="d-flex justify-content-center head_statistic text-center mb-3 bg-secondary">
+        <div class="m-3 model_bgr rounded p-3">
+            <h2>{{ roster.name }}</h2>
+            <div class="text_form_start">
+                <span class="fst-italic">Roster description: </span>{{ roster.description }}
+            </div>
+            <div>
+                <span>
+                    <span class="fst-italic">Roster points: </span>
+                    <span class="roster_points">{{ roster.total_cost }}</span>
+                </span> |
+                <span class="roster_max_cost" value="{{ roster.max_cost }}">
+                    <span class="fst-italic">Roster max points: </span>
+                    <span>{{ roster.max_cost }}</span>
+                </span>
+            </div>
+            <div class="points_left">Points left: </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="d-flex justify-content-center">
+            <table class="border-darktable table-bordered table-sm">
+                <thead class="thead-dark">
+                    <tr  class="text-center">
+                        <th>Name</th>
+                        <th>Command cost</th>
+                        <th>Main_restrictions</th>
+                        <th>Command_benefits</th>
+                        <th>Dedicated transport</th>
+                        <th>HQ</th>
+                        <th>Troops</th>
+                        <th>Elites</th>
+                        <th>Fast attack</th>
+                        <th>Flyers</th>
+                        <th>Heavy support</th>
+                        <th>Lords of war</th>
+                        <th>Press to delete</th>
+                    </tr>
+                </thead>
+                {% for detach in detachments %}
+                    <tr class="detachment_data" detach_id="{{ detach.id }}">
+                        <td>{{ detach.name }}</td>
+                        <td class="text-center">{{ detach.command_cost }}</td>
+                        <td>{{ detach.main_restrictions }}</td>
+                        <td>{{ detach.command_benefits }}</td>
+                        <td>{{ detach.transport_restriction }}</td>
+                        <td class="text-center hq_restr">{{ detach.hq_restriction }}</td>
+                        <td class="text-center troops_restr">{{ detach.troops_restriction }}</td>
+                        <td class="text-center elites_restr">{{ detach.elites_restriction }}</td>
+                        <td class="text-center f_attack_restr">{{ detach.fast_attack_restriction }}</td>
+                        <td class="text-center flyers_restr">{{ detach.flyers_restriction }}</td>
+                        <td class="text-center h_support_restr">{{ detach.heavy_support_restriction }}</td>
+                        <td class="text-center l_o_w_restr">{{ detach.lords_of_war_restriction }}</td>
+                        <td class="text-center"><button class="delete_detachment_btn btn btn-danger">Delete</button></td>
+                    </tr>
+                {% endfor %}
+                <tr class="detachment_blank_row">
+                    <td colspan="13">
+                        <button class="add_new_detachment_btn btn btn-primary">Add Detachment</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="all_detachments_segment">
+            {% include "builder/includes/all_detachments.html" %}
+        </div>
+        <div class="d-flex justify-content-center mt-1">
+            <div>
+                <div class="text-center"><h5>Total detachment restrictions</h5></div>
+                <table class="table-bordered table-sm">
+                    <thead class="thead-dark">
+                        <tr class="text-center">
+                            <th>HQ</th>
+                            <th>Troops</th>
+                            <th>Elites</th>
+                            <th>Fast attack</th>
+                            <th>Flyers</th>
+                            <th>Heavy support</th>
+                            <th>Lords of war</th>
+                        </tr>
+                    </thead>
+                    <tr class="text-center">
+                        <td class="result_hq"></td>
+                        <td class="result_troops"></td>
+                        <td class="result_elites"></td>
+                        <td class="result_f_attack"></td>
+                        <td class="result_flyers"></td>
+                        <td class="result_h_support"></td>
+                        <td class="result_l_o_w"></td>
+                    </tr>
+                    <tr class="text-center">
+                        <td class="roster_det_hq"></td>
+                        <td class="roster_det_troops"></td>
+                        <td class="roster_det_elites"></td>
+                        <td class="roster_det_f_attack"></td>
+                        <td class="roster_det_flyers"></td>
+                        <td class="roster_det_h_support"></td>
+                        <td class="roster_det_l_o_w"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center mt-3">
+        <div class="d-flex">
+            <div class="border border-dark border-3 all_hq_units">
+                <h4 class="p-2 text-center">HQ</h4>
+                <div class="d-flex flex-column">
+                    {% for unit_entry in units_list %}
+                        {% if unit_entry.unit.battlefield_role.name == 'HQ' %}
+                            <a href="#{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="border border-dark border-3 all_troops_units">
+                <h4 class="p-2 text-center">Troops</h4>
+                <div class="d-flex flex-column">
+                    {% for unit_entry in units_list %}
+                        {% if unit_entry.unit.battlefield_role.name == 'Troops' %}
+                            <a href="#{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="border border-dark border-3">
+                <h4 class="p-2 text-center">Dedicated transport</h4>
+                <div class="d-flex flex-column">
+                    {% for unit_entry in units_list %}
+                        {% if unit_entry.unit.battlefield_role.name == 'Dedicated transport' %}
+                            <a href="#{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline">{{ unit_entry.unit.name }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="border border-dark border-3 all_elites_units">
+                <h4 class="p-2 text-center">Elites</h4>
+                <div class="d-flex flex-column">
+                    {% for unit_entry in units_list %}
+                        {% if unit_entry.unit.battlefield_role.name == 'Elites' %}
+                            <a href="#{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="border border-dark border-3 all_f_attack_units">
+                <h4 class="p-2 text-center">Fast attack</h4>
+                <div class="d-flex flex-column">
+                    {% for unit_entry in units_list %}
+                        {% if unit_entry.unit.battlefield_role.name == 'Fast attack' %}
+                            <a href="#{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="border border-dark border-3 all_flyers_units">
+                <h4 class="p-2 text-center">Flyers</h4>
+                <div class="d-flex flex-column">
+                    {% for unit_entry in units_list %}
+                        {% if unit_entry.unit.battlefield_role.name == 'Flyers' %}
+                            <a href="#{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="border border-dark border-3 all_h_support_units">
+                <h4 class="p-2 text-center">Heavy support</h4>
+                <div class="d-flex flex-column">
+                    {% for unit_entry in units_list %}
+                        {% if unit_entry.unit.battlefield_role.name == 'Heavy support' %}
+                            <a href="#{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="border border-dark border-3 all_l_o_w_units">
+                <h4 class="p-2 text-center">Lords of war</h4>
+                <div class="d-flex flex-column">
+                    {% for unit_entry in units_list %}
+                        {% if unit_entry.unit.battlefield_role.name == 'Lords of war' %}
+                            <a href="#{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div>
+            <button class="new_roster_unit_btn btn btn-lg btn-primary mt-3 mb-3" style="display: block; margin: 0 auto;">New roster unit</button>
+            <div class="unit_choose_wrapper border border-3 border-dark container-fluid">
+                <div class="row" style="position: relative;">
+                    <div class="col-2">
+                <div class="mt-3 border border-dark">
+                    {% for unit in all_faction_units %}
+                    <div class="m-1"><button class="btn btn-primary">+</button> <a class="observe_unit" observe_id="{{ unit.unit.pk }}_{{ unit.unit.name }}">{{ unit.unit.name }}</a></div>
+                    {% endfor %}
+                </div>
+            </div>
+                    <div class="col d-flex justify-content-center">
+                        <div>
+                    {% for unit_entry in all_faction_units %}
+                        <div id="{{ unit_entry.unit.pk }}_{{ unit_entry.unit.name }}" class="codex_unit_template container border border-2 border-dark mt-3 bg-secondary unit_element_template" style="position: relative; display: none;">
+                            <div class="row">
+                                <div class="col p-0">
+                                    <div class="text-center bg-secondary d-flex">
+                                        <div class="battle_role">
+                                            <div class="text-light p-2 ms-3">
+                                                <h5>{{ unit_entry.unit.battlefield_role.name }}</h5>
+                                                <div class="p-rating">Power rating: {{unit_entry.unit.power_rating}}</div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-fill">
+                                            <h4 class="text-light p-2">{{ unit_entry.unit.name }}</h4>
+                                        </div>
+                                        <div class="d-flex">
+                                            <h4 class="text-light p-2 me-3 unit_total_cost"></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% for model in unit_entry.models %}
+                            <div class="row m-0 model_element">
+                                <div class="m-0 p-0 model_bgr border border-dark row" model_id="{{ model.model.pk }}">
+                                    <div class="col-1 count_info">
+                                        <div>
+                                            <span min_model_count="{{ model.count_restrictions.min }}" max_model_count="{{ model.count_restrictions.max }}">
+                                                {{ model.count_restrictions.min }}/{{ model.count_restrictions.max }}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span><span class="count_stl m_count">{{ model.count }}</span>/{{ model.count_restrictions.max }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 d-flex">
+                                        <div class="align-self-center">
+                                            <h5>{{ model.model.name }}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col d-flex">
+                                        <table class="bg-light m-0 align-self-center table table-bordered table-sm">
+                                            <thead class="thead-dark">
+                                                <tr class="text-center">
+                                                    <th>Cost</th>
+                                                    <th>M</th>
+                                                    <th>WS</th>
+                                                    <th>BS</th>
+                                                    <th>S</th>
+                                                    <th>T</th>
+                                                    <th>W</th>
+                                                    <th>A</th>
+                                                    <th>Ld</th>
+                                                    <th>Sv</th>
+                                                    <th>Base</th>
+                                                </tr>
+                                            </thead>
+                                            {% for profile in model.profiles %}
+                                                <tr class="text-center">
+                                                    <td class="model_cost m_price">{{ model.model.price }}</td>
+                                                    <td>{{ profile.movement }}</td>
+                                                    <td>{{ profile.weapon_skill }}</td>
+                                                    <td>{{ profile.ballistic_skill }}</td>
+                                                    <td>{{ profile.strength }}</td>
+                                                    <td>{{ profile.toughness }}</td>
+                                                    <td>{{ profile.wounds }}</td>
+                                                    <td>{{ profile.attacks }}</td>
+                                                    <td>{{ profile.leadership }}</td>
+                                                    <td>{{ profile.saving_throw }}</td>
+                                                    <td>{{ profile.base }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <div class="border border-dark bg-light p-2">{{ unit_entry.unit.description }}</div>
+                            <div class="row m-0 border border-dark bg-secondary">
+                                {% for weapon in unit_entry.weapons %}
+                                <div class="model_bgr container mt-1 mb-1 border border-1 border-dark w_element">
+                                    <div class="row">
+                                        <div class="col-1 count_stl count_info d-flex">
+                                            <div class="align-self-center flex-fill text-center w_count">
+                                                {{ weapon.count }}
+                                            </div>
+                                        </div>
+                                        <div class="col-2 d-flex">
+                                            <div class="align-self-center">
+                                                {{ weapon.weapon.name }}
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <table class="small_table_font bg-light m-0 align-self-center table table-bordered table-sm">
+                                                <thead class="thead-dark">
+                                                        <tr class="text-center">
+                                                            <th>Cost</th>
+                                                            <th>Profile</th>
+                                                            <th>Range</th>
+                                                            <th>Type</th>
+                                                            <th>S</th>
+                                                            <th>AP</th>
+                                                            <th>D</th>
+                                                            <th>Abilities</th>
+                                                        </tr>
+                                                    </thead>
+                                                {% for profile in weapon.profiles%}
+                                                    <tr class="text-center">
+                                                        {% if forloop.first %}
+                                                            {% if weapon.weapon.price != '0' %}
+                                                                <td class="model_cost w_price">{{ weapon.weapon.price }}</td>
+                                                            {% else %}
+                                                                <td class="w_price">{{ weapon.weapon.price }}</td>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <td></td>
+                                                        {% endif %}
+                                                        {% if profile.name != 'single' %}
+                                                            <td>{{ profile.name }}</td>
+                                                        {% else %}
+                                                            <td>-</td>
+                                                        {% endif %}
+                                                        <td style="width: 8%">{{ profile.weapon_range }}</td>
+                                                        <td style="width: 8%">{{ profile.weapon_type }}</td>
+                                                        <td style="width: 8%">{{ profile.strength }}</td>
+                                                        <td style="width: 8%">{{ profile.armor_penetration }}</td>
+                                                        <td style="width: 8%">{{ profile.damage }}</td>
+                                                        <td class="text_form_start" style="width: 60%">{{ profile.abilities }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% if unit_entry.unit.wargear_potions %}
+                                <div class="border border-dark bg-light">{{ unit_entry.unit.wargear_potions }}</div>
+                            {% endif %}
+                            {% if unit_entry.abilities|length != 0 %}
+                                <div class="border border-dark bg-light">
+                                    <div class="mb-3">
+                                        <h5 class="text-center mt-1">Abilities</h5>
+                                        <div class="container p-0">
+                                        {% for ability in unit_entry.abilities %}
+                                            <div class="row m-2 p-0 border border-secondary rounded ability_element">
+                                                {% if ability.ability.price != '0' %}
+                                                    {% if ability.bought %}
+                                                        <div class="col-3 border border-2 border-success rounded">{{ ability.ability.name }}</div>
+                                                    {% else %}
+                                                        <div class="col-3 border border-2 border-danger rounded">{{ ability.ability.name }}</div>
+                                                    {% endif %}
+                                                    <div class="col-1 model_cost a_price">{{ ability.ability.price }}</div>
+                                                    <div class="col">{{ ability.ability.description }}</div>
+                                                {% else %}
+                                                    <div class="col-3 border border-2 border-secondary rounded ">{{ ability.ability.name }}</div>
+                                                    <div class="col">{{ ability.ability.description }}</div>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if unit_entry.other_wargear|length != 0 %}
+                                <div class="border border-dark bg-light">
+                                    <div class="">
+                                        <h5 class="text-center mt-1">Other wargear</h5>
+                                        <div class="container p-0">
+                                        {% for wargear in unit_entry.other_wargear %}
+                                            <div class="row m-2 p-0 border border-secondary rounded wargear_element">
+                                                {% if wargear.wargear.price != '0' %}
+                                                    {% if wargear.wargear_count != '0' %}
+                                                        <div class="col-3 border border-2 border-success rounded">{{ wargear.wargear.name }}</div>
+                                                    {% else %}
+                                                        <div class="col-3 border border-2 border-danger rounded">{{ wargear.wargear.name }}</div>
+                                                    {% endif %}
+                                                    <div class="col-1 model_cost war_price">{{ wargear.wargear.price }}</div>
+                                                    <div class="col">{{ wargear.wargear.description }}</div>
+                                                {% else %}
+                                                    <div class="col-3 border border-2 border-secondary rounded ">{{ wargear.wargear.name }}</div>
+                                                    <div class="col">{{ wargear.wargear.description }}</div>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if unit_entry.unit.warlord_trait %}
+                                <div class="row border border-dark bg-light m-0">
+                                    <div class="row p-1">
+                                        <h5 class="col-2 m-1 text-center">Warlord trait</h5>
+                                        <div class="col">{{ unit_entry.unit.warlord_trait }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if unit_entry.unit.psyker %}
+                                <div class="row border border-dark bg-light m-0">
+                                    <div class="row p-1">
+                                        <h5 class="col-2 m-1 text-center">Psyker</h5>
+                                        <div class="col">{{ unit_entry.unit.psyker }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if unit_entry.unit.transport %}
+                                <div class="row border border-dark bg-light m-0">
+                                    <div class="row p-1">
+                                        <h5 class="col-2 m-1 text-center">Transport</h5>
+                                        <div class="col">{{ unit_entry.unit.transport }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div class="border border-dark bg-light m-0">
+                                <div class="row p-1">
+                                    <h5 class="col-2 m-1 text-center">Keywords</h5>
+                                    <div class="col">{{ unit_entry.unit.transport }}
+                                        {% for keyw in unit_entry.unit.keywords.all %}
+                                            {% if forloop.last %}
+                                                {{ keyw.name }}.
+                                            {% else %}
+                                                {{ keyw.name }},
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border border-dark bg-light m-0">
+                                <div class="row p-1">
+                                    <h5 class="col-2 m-1 text-center">Faction Keywords</h5>
+                                    <div class="col">{{ unit_entry.unit.transport }}
+                                        {% for keyw in unit_entry.unit.faction_keywords.all %}
+                                            {% if forloop.last %}
+                                                {{ keyw.name }}.
+                                            {% else %}
+                                                {{ keyw.name }},
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-1">
+                        <div class="side_menu d-flex justify-content-center mt-3">
+                            <div class="d-flex flex-column">
+                                <div class="border border-dark border-3 all_hq_units">
+                                    <div class="side_menu_detachment_header p-2 text-center">HQ</div>
+                                    <div class="d-flex flex-column flex-fill">
+                                        {% for unit_entry in units_list %}
+                                            {% if unit_entry.unit.battlefield_role.name == 'HQ' %}
+                                                <a href="#{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" class="side_menu_unit bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="border border-dark border-3 all_troops_units">
+                                    <div class="side_menu_detachment_header p-2 text-center">Troops</div>
+                                    <div class="d-flex flex-column">
+                                        {% for unit_entry in units_list %}
+                                            {% if unit_entry.unit.battlefield_role.name == 'Troops' %}
+                                                <a href="#{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" class="side_menu_unit bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="border border-dark border-3">
+                                    <div class="side_menu_detachment_header p-2 text-center">Dedicated transport</div>
+                                    <div class="d-flex flex-column">
+                                        {% for unit_entry in units_list %}
+                                            {% if unit_entry.unit.battlefield_role.name == 'Dedicated transport' %}
+                                                <a href="#{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" class="side_menu_unit bg-secondary text-light p-2 border border-dark link_underline">{{ unit_entry.unit.name }}</a>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="border border-dark border-3 all_elites_units">
+                                    <div class="side_menu_detachment_header p-2 text-center">Elites</div>
+                                    <div class="d-flex flex-column">
+                                        {% for unit_entry in units_list %}
+                                            {% if unit_entry.unit.battlefield_role.name == 'Elites' %}
+                                                <a href="#{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" class="side_menu_unit bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="border border-dark border-3 all_f_attack_units">
+                                    <div class="side_menu_detachment_header p-2 text-center">Fast attack</div>
+                                    <div class="d-flex flex-column">
+                                        {% for unit_entry in units_list %}
+                                            {% if unit_entry.unit.battlefield_role.name == 'Fast attack' %}
+                                                <a href="#{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" class="side_menu_unit bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="border border-dark border-3 all_flyers_units">
+                                    <div class="side_menu_detachment_header p-2 text-center">Flyers</div>
+                                    <div class="d-flex flex-column">
+                                        {% for unit_entry in units_list %}
+                                            {% if unit_entry.unit.battlefield_role.name == 'Flyers' %}
+                                                <a href="#{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" class="side_menu_unit bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="border border-dark border-3 all_h_support_units">
+                                    <div class="side_menu_detachment_header p-2 text-center">Heavy support</div>
+                                    <div class="d-flex flex-column">
+                                        {% for unit_entry in units_list %}
+                                            {% if unit_entry.unit.battlefield_role.name == 'Heavy support' %}
+                                                <a href="#{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" class="side_menu_unit bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="border border-dark border-3 all_l_o_w_units">
+                                    <div class="side_menu_detachment_header p-2 text-center">Lords of war</div>
+                                    <div class="d-flex flex-column">
+                                        {% for unit_entry in units_list %}
+                                            {% if unit_entry.unit.battlefield_role.name == 'Lords of war' %}
+                                                <a href="#{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" class="side_menu_unit bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        {% for unit_entry in units_list %}
+                            <div class="container border border-2 border-dark d-flex justify-content-between mt-3 model_bgr">
+                                <div>
+                                    <button class="delete_unit_btn border border-2 border-dark btn btn-primary m-2">Up</button>
+                                    <button class="delete_unit_btn border border-2 border-dark btn btn-primary m-2">Down</button>
+                                </div>
+                                <button class="delete_unit_btn border border-2 border-dark btn btn-danger m-2" related_unit_id="{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}">Delete Unit</button>
+                            </div>
+                            <div id="{{ unit_entry.position_number }}/{{ unit_entry.unit.name }}" position="{{ unit_entry.position_number }}" name="{{ unit_entry.unit.name }}" class="container border border-2 border-dark bg-secondary unit_element">
+                                    <div class="row">
+                                        <div class="col p-0">
+                                            <div class="text-center bg-secondary d-flex">
+                                                <div class="battle_role">
+                                                    <div class="text-light p-2 ms-3">
+                                                        <h5>{{ unit_entry.unit.battlefield_role.name }}</h5>
+                                                        <div class="p-rating">Power rating: {{unit_entry.unit.power_rating}}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-fill">
+                                                    <h4 class="text-light p-2">{{ unit_entry.unit.name }}</h4>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <h4 class="text-light p-2 me-3 unit_total_cost"></h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% for model in unit_entry.models %}
+                                    <div class="row m-0 model_element">
+                                        <div class="m-0 p-0 model_bgr border border-dark row" model_id="{{ model.model.pk }}">
+                                            <div class="col-1 count_info">
+                                                <div>
+                                                    <span min_model_count="{{ model.count_restrictions.min }}" max_model_count="{{ model.count_restrictions.max }}">
+                                                        {{ model.count_restrictions.min }}/{{ model.count_restrictions.max }}
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <span><span class="count_stl m_count">{{ model.count }}</span>/<span class="max_restriction">{{ model.count_restrictions.max }}</span></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-1 d-flex flex-column justify-content-center p-0">
+                                                <div class="d-flex flex-column justify-content-center">
+                                                    <button class="unit_btn model_btn_plus btn-light border border-dark border-1">+</button>
+                                                    <button class="unit_btn model_btn_minus btn-light border border-dark border-1">-</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-3 d-flex">
+                                                <div class="align-self-center">
+                                                    <h5>{{ model.model.name }}</h5>
+                                                </div>
+                                            </div>
+                                            <div class="col d-flex">
+                                                <table class="bg-light m-0 align-self-center table table-bordered table-sm">
+                                                    <thead class="thead-dark">
+                                                        <tr class="text-center">
+                                                            <th>Cost</th>
+                                                            <th>M</th>
+                                                            <th>WS</th>
+                                                            <th>BS</th>
+                                                            <th>S</th>
+                                                            <th>T</th>
+                                                            <th>W</th>
+                                                            <th>A</th>
+                                                            <th>Ld</th>
+                                                            <th>Sv</th>
+                                                            <th>Base</th>
+                                                        </tr>
+                                                    </thead>
+                                                    {% for profile in model.profiles %}
+                                                        <tr class="text-center">
+                                                            <td class="model_cost m_price">{{ model.model.price }}</td>
+                                                            <td>{{ profile.movement }}</td>
+                                                            <td>{{ profile.weapon_skill }}</td>
+                                                            <td>{{ profile.ballistic_skill }}</td>
+                                                            <td>{{ profile.strength }}</td>
+                                                            <td>{{ profile.toughness }}</td>
+                                                            <td>{{ profile.wounds }}</td>
+                                                            <td>{{ profile.attacks }}</td>
+                                                            <td>{{ profile.leadership }}</td>
+                                                            <td>{{ profile.saving_throw }}</td>
+                                                            <td>{{ profile.base }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    <div class="border border-dark bg-light p-2">{{ unit_entry.unit.description }}</div>
+                                    <div class="row m-0 border border-dark bg-secondary">
+                                        {% for weapon in unit_entry.weapons %}
+                                        <div class="weapon_row model_bgr container mt-1 mb-1 border border-1 border-dark w_element">
+                                            <div class="row">
+                                                <div class="col-1 count_stl count_info d-flex">
+                                                    <div class="align-self-center flex-fill text-center w_count">
+                                                        {{ weapon.count }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-1 d-flex flex-column justify-content-center p-0">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <button class="unit_btn weapon_btn_plus btn-light border border-dark border-1">+</button>
+                                                        <button class="unit_btn weapon_btn_minus btn-light border border-dark border-1">-</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2 d-flex">
+                                                    <div class="align-self-center">
+                                                        {{ weapon.weapon.name }}
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <table class="small_table_font bg-light m-0 align-self-center table table-bordered table-sm">
+                                                        <thead class="thead-dark">
+                                                                <tr class="text-center">
+                                                                    <th>Cost</th>
+                                                                    <th>Profile</th>
+                                                                    <th>Range</th>
+                                                                    <th>Type</th>
+                                                                    <th>S</th>
+                                                                    <th>AP</th>
+                                                                    <th>D</th>
+                                                                    <th>Abilities</th>
+                                                                </tr>
+                                                            </thead>
+                                                        {% for profile in weapon.profiles%}
+                                                            <tr class="text-center">
+                                                                {% if forloop.first %}
+                                                                    {% if weapon.weapon.price != '0' %}
+                                                                        <td class="model_cost w_price">{{ weapon.weapon.price }}</td>
+                                                                    {% else %}
+                                                                        <td class="w_price">{{ weapon.weapon.price }}</td>
+                                                                    {% endif %}
+                                                                {% else %}
+                                                                    <td></td>
+                                                                {% endif %}
+                                                                {% if profile.name != 'single' %}
+                                                                    <td>{{ profile.name }}</td>
+                                                                {% else %}
+                                                                    <td>-</td>
+                                                                {% endif %}
+                                                                <td style="width: 8%">{{ profile.weapon_range }}</td>
+                                                                <td style="width: 8%">{{ profile.weapon_type }}</td>
+                                                                <td style="width: 8%">{{ profile.strength }}</td>
+                                                                <td style="width: 8%">{{ profile.armor_penetration }}</td>
+                                                                <td style="width: 8%">{{ profile.damage }}</td>
+                                                                <td class="text_form_start" style="width: 60%">{{ profile.abilities }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% if unit_entry.unit.wargear_potions %}
+                                        <div class="border border-dark bg-light">{{ unit_entry.unit.wargear_potions }}</div>
+                                    {% endif %}
+                                    {% if unit_entry.abilities|length != 0 %}
+                                        <div class="border border-dark bg-light">
+                                            <div class="mb-3">
+                                                <h5 class="text-center mt-1">Abilities</h5>
+                                                <div class="container p-0">
+                                                {% for ability in unit_entry.abilities %}
+                                                    <div class="row m-2 p-0 border border-secondary rounded ability_element">
+                                                        {% if ability.ability.price != '0' %}
+                                                            {% if ability.bought %}
+                                                                <div class="col-3 border border-2 border-success rounded" bought="true">{{ ability.ability.name }}</div>
+                                                            {% else %}
+                                                                <div class="col-3 border border-2 border-danger rounded" bought="false">{{ ability.ability.name }}</div>
+                                                            {% endif %}
+                                                            <div class="col-1 model_cost a_price">{{ ability.ability.price }}</div>
+                                                            <div class="col-1 d-flex flex-column justify-content-center p-0">
+                                                                <button class="ability_btn_plus unit_btn btn-light border border-dark border-1">+</button>
+                                                            </div>
+                                                            <div class="col">{{ ability.ability.description }}</div>
+                                                        {% else %}
+                                                            <div class="col-3 border border-2 border-secondary rounded ">{{ ability.ability.name }}</div>
+                                                            <div class="col">{{ ability.ability.description }}</div>
+                                                        {% endif %}
+                                                    </div>
+                                                {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if unit_entry.other_wargear|length != 0 %}
+                                        <div class="border border-dark bg-light">
+                                            <div class="">
+                                                <h5 class="text-center mt-1">Other wargear</h5>
+                                                <div class="container p-0">
+                                                {% for wargear in unit_entry.other_wargear %}
+                                                    <div class="row m-2 p-0 border border-secondary rounded wargear_element">
+                                                        {% if wargear.wargear.price != '0' %}
+                                                            {% if wargear.wargear_count != '0' %}
+                                                                <div class="col-3 border border-2 border-success rounded" bought="true">{{ wargear.wargear.name }}</div>
+                                                            {% else %}
+                                                                <div class="col-3 border border-2 border-danger rounded" bought="false">{{ wargear.wargear.name }}</div>
+                                                            {% endif %}
+                                                            <div class="col-1 model_cost war_price">{{ wargear.wargear.price }}</div>
+                                                            <div class="col-1 d-flex flex-column justify-content-center p-0">
+                                                                    <button class="wargear_btn_plus unit_btn btn-light border border-dark border-1">+</button>
+                                                            </div>
+                                                            <div class="col">{{ wargear.wargear.description }}</div>
+                                                        {% else %}
+                                                            <div class="col-3 border border-2 border-secondary rounded ">{{ wargear.wargear.name }}</div>
+                                                            <div class="col">{{ wargear.wargear.description }}</div>
+                                                        {% endif %}
+                                                    </div>
+                                                {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if unit_entry.unit.warlord_trait %}
+                                        <div class="row border border-dark bg-light m-0">
+                                            <div class="row p-1">
+                                                <h5 class="col-2 m-1 text-center">Warlord trait</h5>
+                                                <div class="col">{{ unit_entry.unit.warlord_trait }}</div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if unit_entry.unit.psyker %}
+                                        <div class="row border border-dark bg-light m-0">
+                                            <div class="row p-1">
+                                                <h5 class="col-2 m-1 text-center">Psyker</h5>
+                                                <div class="col">{{ unit_entry.unit.psyker }}</div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if unit_entry.unit.transport %}
+                                        <div class="row border border-dark bg-light m-0">
+                                            <div class="row p-1">
+                                                <h5 class="col-2 m-1 text-center">Transport</h5>
+                                                <div class="col">{{ unit_entry.unit.transport }}</div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    <div class="border border-dark bg-light m-0">
+                                        <div class="row p-1">
+                                            <h5 class="col-2 m-1 text-center">Keywords</h5>
+                                            <div class="col">{{ unit_entry.unit.transport }}
+                                                {% for keyw in unit_entry.unit.keywords.all %}
+                                                    {% if forloop.last %}
+                                                        {{ keyw.name }}.
+                                                    {% else %}
+                                                        {{ keyw.name }},
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="border border-dark bg-light m-0">
+                                        <div class="row p-1">
+                                            <h5 class="col-2 m-1 text-center">Faction Keywords</h5>
+                                            <div class="col">{{ unit_entry.unit.transport }}
+                                                {% for keyw in unit_entry.unit.faction_keywords.all %}
+                                                    {% if forloop.last %}
+                                                        {{ keyw.name }}.
+                                                    {% else %}
+                                                        {{ keyw.name }},
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="">
+                {% for unit_entry in units_list %}
+
+                    <div id="11111{{ unit_entry.position_number }}_{{ unit_entry.unit.name }}" class="container border border-2 border-dark mt-3 bg-secondary unit_element">
+                            <div class="row">
+                                <div class="col p-0">
+                                    <div class="text-center bg-secondary d-flex">
+                                        <div class="battle_role">
+                                            <div class="text-light p-2 ms-3">
+                                                <h5>{{ unit_entry.unit.battlefield_role.name }}</h5>
+                                                <div class="p-rating">Power rating: {{unit_entry.unit.power_rating}}</div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-fill">
+                                            <h4 class="text-light p-2">{{ unit_entry.unit.name }}</h4>
+                                        </div>
+                                        <div class="d-flex">
+                                            <h4 class="text-light p-2 me-3 unit_total_cost"></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% for model in unit_entry.models %}
+                            <div class="row m-0 model_element">
+                                <div class="m-0 p-0 model_bgr border border-dark row" model_id="{{ model.model.pk }}">
+                                    <div class="col-1 count_info">
+                                        <div>
+                                            <span min_model_count="{{ model.count_restrictions.min }}" max_model_count="{{ model.count_restrictions.max }}">
+                                                {{ model.count_restrictions.min }}/{{ model.count_restrictions.max }}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span><span class="count_stl m_count">{{ model.count }}</span>/{{ model.count_restrictions.max }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 d-flex">
+                                        <div class="align-self-center">
+                                            <h5>{{ model.model.name }}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col d-flex">
+                                        <table class="bg-light m-0 align-self-center table table-bordered table-sm">
+                                            <thead class="thead-dark">
+                                                <tr class="text-center">
+                                                    <th>Cost</th>
+                                                    <th>M</th>
+                                                    <th>WS</th>
+                                                    <th>BS</th>
+                                                    <th>S</th>
+                                                    <th>T</th>
+                                                    <th>W</th>
+                                                    <th>A</th>
+                                                    <th>Ld</th>
+                                                    <th>Sv</th>
+                                                    <th>Base</th>
+                                                </tr>
+                                            </thead>
+                                            {% for profile in model.profiles %}
+                                                <tr class="text-center">
+                                                    <td class="model_cost m_price">{{ model.model.price }}</td>
+                                                    <td>{{ profile.movement }}</td>
+                                                    <td>{{ profile.weapon_skill }}</td>
+                                                    <td>{{ profile.ballistic_skill }}</td>
+                                                    <td>{{ profile.strength }}</td>
+                                                    <td>{{ profile.toughness }}</td>
+                                                    <td>{{ profile.wounds }}</td>
+                                                    <td>{{ profile.attacks }}</td>
+                                                    <td>{{ profile.leadership }}</td>
+                                                    <td>{{ profile.saving_throw }}</td>
+                                                    <td>{{ profile.base }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <div class="border border-dark bg-light p-2">{{ unit_entry.unit.description }}</div>
+                            <div class="row m-0 border border-dark bg-secondary">
+                                {% for weapon in unit_entry.weapons %}
+                                <div class="model_bgr container mt-1 mb-1 border border-1 border-dark w_element">
+                                    <div class="row">
+                                        <div class="col-1 count_stl count_info d-flex">
+                                            <div class="align-self-center flex-fill text-center w_count">
+                                                {{ weapon.count }}
+                                            </div>
+                                        </div>
+                                        <div class="col-2 d-flex">
+                                            <div class="align-self-center">
+                                                {{ weapon.weapon.name }}
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <table class="small_table_font bg-light m-0 align-self-center table table-bordered table-sm">
+                                                <thead class="thead-dark">
+                                                        <tr class="text-center">
+                                                            <th>Cost</th>
+                                                            <th>Profile</th>
+                                                            <th>Range</th>
+                                                            <th>Type</th>
+                                                            <th>S</th>
+                                                            <th>AP</th>
+                                                            <th>D</th>
+                                                            <th>Abilities</th>
+                                                        </tr>
+                                                    </thead>
+                                                {% for profile in weapon.profiles%}
+                                                    <tr class="text-center">
+                                                        {% if forloop.first %}
+                                                            {% if weapon.weapon.price != '0' %}
+                                                                <td class="model_cost w_price">{{ weapon.weapon.price }}</td>
+                                                            {% else %}
+                                                                <td class="w_price">{{ weapon.weapon.price }}</td>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <td></td>
+                                                        {% endif %}
+                                                        {% if profile.name != 'single' %}
+                                                            <td>{{ profile.name }}</td>
+                                                        {% else %}
+                                                            <td>-</td>
+                                                        {% endif %}
+                                                        <td style="width: 8%">{{ profile.weapon_range }}</td>
+                                                        <td style="width: 8%">{{ profile.weapon_type }}</td>
+                                                        <td style="width: 8%">{{ profile.strength }}</td>
+                                                        <td style="width: 8%">{{ profile.armor_penetration }}</td>
+                                                        <td style="width: 8%">{{ profile.damage }}</td>
+                                                        <td class="text_form_start" style="width: 60%">{{ profile.abilities }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% if unit_entry.unit.wargear_potions %}
+                                <div class="border border-dark bg-light">{{ unit_entry.unit.wargear_potions }}</div>
+                            {% endif %}
+                            {% if unit_entry.abilities|length != 0 %}
+                                <div class="border border-dark bg-light">
+                                    <div class="mb-3">
+                                        <h5 class="text-center mt-1">Abilities</h5>
+                                        <div class="container p-0">
+                                        {% for ability in unit_entry.abilities %}
+                                            <div class="row m-2 p-0 border border-secondary rounded ability_element">
+                                                {% if ability.ability.price != '0' %}
+                                                    {% if ability.bought %}
+                                                        <div class="col-3 border border-2 border-success rounded">{{ ability.ability.name }}</div>
+                                                    {% else %}
+                                                        <div class="col-3 border border-2 border-danger rounded">{{ ability.ability.name }}</div>
+                                                    {% endif %}
+                                                    <div class="col-1 model_cost a_price">{{ ability.ability.price }}</div>
+                                                    <div class="col">{{ ability.ability.description }}</div>
+                                                {% else %}
+                                                    <div class="col-3 border border-2 border-secondary rounded ">{{ ability.ability.name }}</div>
+                                                    <div class="col">{{ ability.ability.description }}</div>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if unit_entry.other_wargear|length != 0 %}
+                                <div class="border border-dark bg-light">
+                                    <div class="">
+                                        <h5 class="text-center mt-1">Other wargear</h5>
+                                        <div class="container p-0">
+                                        {% for wargear in unit_entry.other_wargear %}
+                                            <div class="row m-2 p-0 border border-secondary rounded wargear_element">
+                                                {% if wargear.wargear.price != '0' %}
+                                                    {% if wargear.wargear_count != '0' %}
+                                                        <div class="col-3 border border-2 border-success rounded">{{ wargear.wargear.name }}</div>
+                                                    {% else %}
+                                                        <div class="col-3 border border-2 border-danger rounded">{{ wargear.wargear.name }}</div>
+                                                    {% endif %}
+                                                    <div class="col-1 model_cost war_price">{{ wargear.wargear.price }}</div>
+                                                    <div class="col">{{ wargear.wargear.description }}</div>
+                                                {% else %}
+                                                    <div class="col-3 border border-2 border-secondary rounded ">{{ wargear.wargear.name }}</div>
+                                                    <div class="col">{{ wargear.wargear.description }}</div>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if unit_entry.unit.warlord_trait %}
+                                <div class="row border border-dark bg-light m-0">
+                                    <div class="row p-1">
+                                        <h5 class="col-2 m-1 text-center">Warlord trait</h5>
+                                        <div class="col">{{ unit_entry.unit.warlord_trait }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if unit_entry.unit.psyker %}
+                                <div class="row border border-dark bg-light m-0">
+                                    <div class="row p-1">
+                                        <h5 class="col-2 m-1 text-center">Psyker</h5>
+                                        <div class="col">{{ unit_entry.unit.psyker }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if unit_entry.unit.transport %}
+                                <div class="row border border-dark bg-light m-0">
+                                    <div class="row p-1">
+                                        <h5 class="col-2 m-1 text-center">Transport</h5>
+                                        <div class="col">{{ unit_entry.unit.transport }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div class="border border-dark bg-light m-0">
+                                <div class="row p-1">
+                                    <h5 class="col-2 m-1 text-center">Keywords</h5>
+                                    <div class="col">{{ unit_entry.unit.transport }}
+                                        {% for keyw in unit_entry.unit.keywords.all %}
+                                            {% if forloop.last %}
+                                                {{ keyw.name }}.
+                                            {% else %}
+                                                {{ keyw.name }},
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border border-dark bg-light m-0">
+                                <div class="row p-1">
+                                    <h5 class="col-2 m-1 text-center">Faction Keywords</h5>
+                                    <div class="col">{{ unit_entry.unit.transport }}
+                                        {% for keyw in unit_entry.unit.faction_keywords.all %}
+                                            {% if forloop.last %}
+                                                {{ keyw.name }}.
+                                            {% else %}
+                                                {{ keyw.name }},
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                {% endfor %}
+            </div>
+        </div>
+<!--        {% for unit_entry in units_list %}-->
+<!--        <div id="{{ unit_entry.position_number }}{{ unit_entry.unit.name }}" class="container border border-2 border-dark mt-3 bg-secondary unit_element">-->
+<!--            <div class="row">-->
+<!--                <div class="col p-0">-->
+<!--                    <div class="text-center bg-secondary d-flex">-->
+<!--                        <div class="battle_role">-->
+<!--                            <div class="text-light p-2 ms-3">-->
+<!--                                <h5>{{ unit_entry.unit.battlefield_role.name }}</h5>-->
+<!--                                <div class="p-rating">Power rating: {{unit_entry.unit.power_rating}}</div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="flex-fill">-->
+<!--                            <h4 class="text-light p-2">{{ unit_entry.unit.name }}</h4>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex">-->
+<!--                            <h4 class="text-light p-2 me-3 unit_total_cost"></h4>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            {% for model in unit_entry.models %}-->
+<!--            <div class="row m-0 model_element">-->
+<!--                <div class="m-0 p-0 model_bgr border border-dark row" model_id="{{ model.model.pk }}">-->
+<!--                    <div class="col-1 count_info">-->
+<!--                        <div>-->
+<!--                            <span min_model_count="{{ model.count_restrictions.min }}" max_model_count="{{ model.count_restrictions.max }}">-->
+<!--                                {{ model.count_restrictions.min }}/{{ model.count_restrictions.max }}-->
+<!--                            </span>-->
+<!--                        </div>-->
+<!--                        <div>-->
+<!--                            <span><span class="count_stl m_count">{{ model.count }}</span>/{{ model.count_restrictions.max }}</span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="col-3 d-flex">-->
+<!--                        <div class="align-self-center">-->
+<!--                            <h5>{{ model.model.name }}</h5>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="col d-flex">-->
+<!--                        <table class="bg-light m-0 align-self-center table table-bordered table-sm">-->
+<!--                            <thead class="thead-dark">-->
+<!--                                <tr class="text-center">-->
+<!--                                    <th>Cost</th>-->
+<!--                                    <th>M</th>-->
+<!--                                    <th>WS</th>-->
+<!--                                    <th>BS</th>-->
+<!--                                    <th>S</th>-->
+<!--                                    <th>T</th>-->
+<!--                                    <th>W</th>-->
+<!--                                    <th>A</th>-->
+<!--                                    <th>Ld</th>-->
+<!--                                    <th>Sv</th>-->
+<!--                                    <th>Base</th>-->
+<!--                                </tr>-->
+<!--                            </thead>-->
+<!--                            {% for profile in model.profiles %}-->
+<!--                                <tr class="text-center">-->
+<!--                                    <td class="model_cost m_price">{{ model.model.price }}</td>-->
+<!--                                    <td>{{ profile.movement }}</td>-->
+<!--                                    <td>{{ profile.weapon_skill }}</td>-->
+<!--                                    <td>{{ profile.ballistic_skill }}</td>-->
+<!--                                    <td>{{ profile.strength }}</td>-->
+<!--                                    <td>{{ profile.toughness }}</td>-->
+<!--                                    <td>{{ profile.wounds }}</td>-->
+<!--                                    <td>{{ profile.attacks }}</td>-->
+<!--                                    <td>{{ profile.leadership }}</td>-->
+<!--                                    <td>{{ profile.saving_throw }}</td>-->
+<!--                                    <td>{{ profile.base }}</td>-->
+<!--                                </tr>-->
+<!--                            {% endfor %}-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            {% endfor %}-->
+<!--            <div class="border border-dark bg-light p-2">{{ unit_entry.unit.description }}</div>-->
+<!--            <div class="row m-0 border border-dark bg-secondary">-->
+<!--                {% for weapon in unit_entry.weapons %}-->
+<!--                <div class="model_bgr container mt-1 mb-1 border border-1 border-dark w_element">-->
+<!--                    <div class="row">-->
+<!--                        <div class="col-1 count_stl count_info d-flex">-->
+<!--                            <div class="align-self-center flex-fill text-center w_count">-->
+<!--                                {{ weapon.count }}-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="col-2 d-flex">-->
+<!--                            <div class="align-self-center">-->
+<!--                                {{ weapon.weapon.name }}-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="col">-->
+<!--                            <table class="small_table_font bg-light m-0 align-self-center table table-bordered table-sm">-->
+<!--                                <thead class="thead-dark">-->
+<!--                                        <tr class="text-center">-->
+<!--                                            <th>Cost</th>-->
+<!--                                            <th>Profile</th>-->
+<!--                                            <th>Range</th>-->
+<!--                                            <th>Type</th>-->
+<!--                                            <th>S</th>-->
+<!--                                            <th>AP</th>-->
+<!--                                            <th>D</th>-->
+<!--                                            <th>Abilities</th>-->
+<!--                                        </tr>-->
+<!--                                    </thead>-->
+<!--                                {% for profile in weapon.profiles%}-->
+<!--                                    <tr class="text-center">-->
+<!--                                        {% if forloop.first %}-->
+<!--                                            {% if weapon.weapon.price != '0' %}-->
+<!--                                                <td class="model_cost w_price">{{ weapon.weapon.price }}</td>-->
+<!--                                            {% else %}-->
+<!--                                                <td class="w_price">{{ weapon.weapon.price }}</td>-->
+<!--                                            {% endif %}-->
+<!--                                        {% else %}-->
+<!--                                            <td></td>-->
+<!--                                        {% endif %}-->
+<!--                                        {% if profile.name != 'single' %}-->
+<!--                                            <td>{{ profile.name }}</td>-->
+<!--                                        {% else %}-->
+<!--                                            <td>-</td>-->
+<!--                                        {% endif %}-->
+<!--                                        <td style="width: 8%">{{ profile.weapon_range }}</td>-->
+<!--                                        <td style="width: 8%">{{ profile.weapon_type }}</td>-->
+<!--                                        <td style="width: 8%">{{ profile.strength }}</td>-->
+<!--                                        <td style="width: 8%">{{ profile.armor_penetration }}</td>-->
+<!--                                        <td style="width: 8%">{{ profile.damage }}</td>-->
+<!--                                        <td class="text_form_start" style="width: 60%">{{ profile.abilities }}</td>-->
+<!--                                    </tr>-->
+<!--                                {% endfor %}-->
+<!--                            </table>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                {% endfor %}-->
+<!--            </div>-->
+<!--            {% if unit_entry.unit.wargear_potions %}-->
+<!--                <div class="border border-dark bg-light">{{ unit_entry.unit.wargear_potions }}</div>-->
+<!--            {% endif %}-->
+<!--            {% if unit_entry.abilities|length != 0 %}-->
+<!--                <div class="border border-dark bg-light">-->
+<!--                    <div class="mb-3">-->
+<!--                        <h5 class="text-center mt-1">Abilities</h5>-->
+<!--                        <div class="container p-0">-->
+<!--                        {% for ability in unit_entry.abilities %}-->
+<!--                            <div class="row m-2 p-0 border border-secondary rounded ability_element">-->
+<!--                                {% if ability.ability.price != '0' %}-->
+<!--                                    {% if ability.bought %}-->
+<!--                                        <div class="col-3 border border-2 border-success rounded">{{ ability.ability.name }}</div>-->
+<!--                                    {% else %}-->
+<!--                                        <div class="col-3 border border-2 border-danger rounded">{{ ability.ability.name }}</div>-->
+<!--                                    {% endif %}-->
+<!--                                    <div class="col-1 model_cost a_price">{{ ability.ability.price }}</div>-->
+<!--                                    <div class="col">{{ ability.ability.description }}</div>-->
+<!--                                {% else %}-->
+<!--                                    <div class="col-3 border border-2 border-secondary rounded ">{{ ability.ability.name }}</div>-->
+<!--                                    <div class="col">{{ ability.ability.description }}</div>-->
+<!--                                {% endif %}-->
+<!--                            </div>-->
+<!--                        {% endfor %}-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            {% endif %}-->
+<!--            {% if unit_entry.other_wargear|length != 0 %}-->
+<!--                <div class="border border-dark bg-light">-->
+<!--                    <div class="">-->
+<!--                        <h5 class="text-center mt-1">Other wargear</h5>-->
+<!--                        <div class="container p-0">-->
+<!--                        {% for wargear in unit_entry.other_wargear %}-->
+<!--                            <div class="row m-2 p-0 border border-secondary rounded wargear_element">-->
+<!--                                {% if wargear.wargear.price != '0' %}-->
+<!--                                    {% if wargear.wargear_count != '0' %}-->
+<!--                                        <div class="col-3 border border-2 border-success rounded">{{ wargear.wargear.name }}</div>-->
+<!--                                    {% else %}-->
+<!--                                        <div class="col-3 border border-2 border-danger rounded">{{ wargear.wargear.name }}</div>-->
+<!--                                    {% endif %}-->
+<!--                                    <div class="col-1 model_cost war_price">{{ wargear.wargear.price }}</div>-->
+<!--                                    <div class="col">{{ wargear.wargear.description }}</div>-->
+<!--                                {% else %}-->
+<!--                                    <div class="col-3 border border-2 border-secondary rounded ">{{ wargear.wargear.name }}</div>-->
+<!--                                    <div class="col">{{ wargear.wargear.description }}</div>-->
+<!--                                {% endif %}-->
+<!--                            </div>-->
+<!--                        {% endfor %}-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            {% endif %}-->
+<!--            {% if unit_entry.unit.warlord_trait %}-->
+<!--                <div class="row border border-dark bg-light m-0">-->
+<!--                    <div class="row p-1">-->
+<!--                        <h5 class="col-2 m-1 text-center">Warlord trait</h5>-->
+<!--                        <div class="col">{{ unit_entry.unit.warlord_trait }}</div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            {% endif %}-->
+<!--            {% if unit_entry.unit.psyker %}-->
+<!--                <div class="row border border-dark bg-light m-0">-->
+<!--                    <div class="row p-1">-->
+<!--                        <h5 class="col-2 m-1 text-center">Psyker</h5>-->
+<!--                        <div class="col">{{ unit_entry.unit.psyker }}</div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            {% endif %}-->
+<!--            {% if unit_entry.unit.transport %}-->
+<!--                <div class="row border border-dark bg-light m-0">-->
+<!--                    <div class="row p-1">-->
+<!--                        <h5 class="col-2 m-1 text-center">Transport</h5>-->
+<!--                        <div class="col">{{ unit_entry.unit.transport }}</div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            {% endif %}-->
+<!--            <div class="border border-dark bg-light m-0">-->
+<!--                <div class="row p-1">-->
+<!--                    <h5 class="col-2 m-1 text-center">Keywords</h5>-->
+<!--                    <div class="col">{{ unit_entry.unit.transport }}-->
+<!--                        {% for keyw in unit_entry.unit.keywords.all %}-->
+<!--                            {% if forloop.last %}-->
+<!--                                {{ keyw.name }}.-->
+<!--                            {% else %}-->
+<!--                                {{ keyw.name }},-->
+<!--                            {% endif %}-->
+<!--                        {% endfor %}-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="border border-dark bg-light m-0">-->
+<!--                <div class="row p-1">-->
+<!--                    <h5 class="col-2 m-1 text-center">Faction Keywords</h5>-->
+<!--                    <div class="col">{{ unit_entry.unit.transport }}-->
+<!--                        {% for keyw in unit_entry.unit.faction_keywords.all %}-->
+<!--                            {% if forloop.last %}-->
+<!--                                {{ keyw.name }}.-->
+<!--                            {% else %}-->
+<!--                                {{ keyw.name }},-->
+<!--                            {% endif %}-->
+<!--                        {% endfor %}-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        {% endfor %}-->
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_scripts %}
+<script src="{% static 'js/display.js' %}"></script>
+<script src="{% static 'js/manage_roster.js' %}"></script>
+{% endblock %}

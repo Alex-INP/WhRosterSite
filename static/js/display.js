@@ -1,19 +1,52 @@
 function calc_points_left(){
     let points_left = document.querySelector(".points_left")
-    let roster_cost = document.querySelector(".roster_cost").getAttribute("value")
+    let roster_cost = parseInt(document.querySelector(".roster_points").textContent)
     let roster_max_cost = document.querySelector(".roster_max_cost").getAttribute("value")
-    points_left.innerText = `Points left: ${roster_max_cost - roster_cost}`
+    let result = roster_max_cost - roster_cost
+    if (result < 0) {
+        points_left.classList.add("text-danger")
+    } else {
+        points_left.classList.add("model_cost")
+    }
+    points_left.innerText = `Points left: ${result}`
+}
+
+function reset_user_detachment_count(target) {
+    const sources = {
+        "hq": [".all_hq_units", ".roster_det_hq", ".result_hq"],
+        "troops": [".all_troops_units", ".roster_det_troops", ".result_troops"],
+        "elites": [".all_elites_units", ".roster_det_elites", ".result_elites"],
+        "f_attack": [".all_f_attack_units", ".roster_det_f_attack", ".result_f_attack"],
+        "flyers": [".all_flyers_units", ".roster_det_flyers", ".result_flyers"],
+        "h_support": [".all_h_support_units", ".roster_det_h_support", ".result_h_support"],
+        "l_o_w": [".all_l_o_w_units", ".roster_det_l_o_w", ".result_l_o_w"]
+    }
+    let settings = sources[target]
+    let units_count = document.querySelector(settings[0]).querySelectorAll(".unit_entity_el").length
+    let target_result_el = document.querySelector(settings[1])
+    let restrictions = document.querySelector(settings[2]).textContent.split("-")
+
+    let min = parseInt(restrictions[0])
+    let max = parseInt(restrictions[1])
+    if ( target_result_el != null){
+        target_result_el.textContent = units_count
+        if (min <= units_count && units_count <= max){
+            target_result_el.classList.add("text-primary")
+        } else {
+            target_result_el.classList.add("text-danger", "fw-bold")
+        }
+    }
 }
 
 function calc_detachment_restrictions() {
     const classes_data = [
-        [".result_hq", ".hq_restr"],
-        [".result_troops", ".troops_restr"],
-        [".result_elites", ".elites_restr"],
-        [".result_f_attack", ".f_attack_restr"],
-        [".result_flyers", ".flyers_restr"],
-        [".result_h_support", ".h_support_restr"],
-        [".result_l_o_w", ".l_o_w_restr"]
+        [".result_hq", ".hq_restr", "hq"],
+        [".result_troops", ".troops_restr", "troops"],
+        [".result_elites", ".elites_restr", "elites"],
+        [".result_f_attack", ".f_attack_restr", "f_attack"],
+        [".result_flyers", ".flyers_restr", "flyers"],
+        [".result_h_support", ".h_support_restr", "h_support"],
+        [".result_l_o_w", ".l_o_w_restr", "l_o_w"]
     ]
     for (let cl_data of classes_data) {
         let result_el = document.querySelector(cl_data[0])
@@ -31,6 +64,7 @@ function calc_detachment_restrictions() {
 
         result_el.textContent = `${min}-${max}`
         }
+    reset_user_detachment_count(cl_data[2])
     }
 }
 
@@ -68,11 +102,24 @@ function calc_unit_cost(unit_el){
     target_el.textContent = result_cost
 }
 
-window.onload = function(){
-    calc_points_left()
-    calc_detachment_restrictions()
+function count_roster_total_points() {
+    let result = 0
+    let all_units_els = document.querySelectorAll(".unit_element")
+    for( let unit of all_units_els) {
+        let unit_cost = unit.querySelector(".unit_total_cost").textContent
+        result += parseInt(unit_cost)
+    }
+    document.querySelector(".roster_points").textContent = result
+}
 
+
+window.onload = function(){
+    calc_detachment_restrictions()
     for (let unit_el of document.querySelectorAll(".unit_element")) {
         calc_unit_cost(unit_el)
     }
+    count_roster_total_points()
+    calc_points_left()
 }
+
+const funfun = function(){console.log("meme")}

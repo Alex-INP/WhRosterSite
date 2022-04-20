@@ -1,0 +1,39 @@
+<div class="all_detach_header">
+    <button class="all_detach_close_btn btn btn-primary">Close</button>
+</div>
+<table class="border-darktable table-bordered table-sm">
+    <thead class="thead-dark">
+        <tr class="text-center">
+            <th>Name</th>
+            <th>Command cost</th>
+            <th>Main_restrictions</th>
+            <th>Command_benefits</th>
+            <th>Dedicated transport</th>
+            <th>HQ</th>
+            <th>Troops</th>
+            <th>Elites</th>
+            <th>Fast attack</th>
+            <th>Flyers</th>
+            <th>Heavy support</th>
+            <th>Lords of war</th>
+            <th></th>
+        </tr>
+    </thead>
+    {% for detach in all_detachments %}
+        <tr detach_id="{{ detach.id }}">
+            <td class="detach_name_all">{{ detach.name }}</td>
+            <td class="text-center detach_command_cost_all">{{ detach.command_cost }}</td>
+            <td class="detach_restrictions_all">{{ detach.main_restrictions }}</td>
+            <td class="detach_command_benefits_all">{{ detach.command_benefits }}</td>
+            <td class="detach_transport_restriction_all">{{ detach.transport_restriction }}</td>
+            <td class="text-center hq_restr_all">{{ detach.hq_restriction }}</td>
+            <td class="text-center troops_restr_all">{{ detach.troops_restriction }}</td>
+            <td class="text-center elites_restr_all">{{ detach.elites_restriction }}</td>
+            <td class="text-center f_attack_restr_all">{{ detach.fast_attack_restriction }}</td>
+            <td class="text-center flyers_restr_all">{{ detach.flyers_restriction }}</td>
+            <td class="text-center h_support_restr_all">{{ detach.heavy_support_restriction }}</td>
+            <td class="text-center l_o_w_restr_all">{{ detach.lords_of_war_restriction }}</td>
+            <td><button class="add_detachment_btn btn btn-primary">ADD</button></td>
+        </tr>
+    {% endfor %}
+</table>

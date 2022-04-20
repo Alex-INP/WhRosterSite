@@ -1,0 +1,58 @@
+.all_detachments_segment {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 1;
+    background-color: white;
+}
+
+.all_detach_header {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+}
+
+.all_detach_close_btn {
+    width: 300px;
+}
+
+.add_new_detachment_btn {
+    margin: 0 auto;
+    display: block;
+}
+
+.unit_choose_wrapper {
+    position: absolute;
+    background-color: white;
+    left: 0px;
+    display: none;
+}
+
+.dock_side_unit_menu {
+    position: fixed;
+    top: 0px;
+    left: 40px;
+    margin-top: 45px !important;
+}
+
+.side_menu {
+    display:none !important;
+}
+
+.side_menu_unit {
+    font-size: 12px;
+    padding: 2px !important;
+}
+
+.side_menu_detachment_header {
+    font-size: 17px;
+    font-weight: bold;
+    padding: 0px !important;
+}
+
+.unit_btn {
+    height: 30px;
+    width: 30px;
+    margin: 2px;
+}
+

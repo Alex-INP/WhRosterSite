@@ -7,14 +7,26 @@
 
 {% block content %}
 <div class="m-3">
-    <div>
-        <div>Roster name: {{ roster.name }}</div>
-        <div>Roster description: {{ roster.description }}</div>
-        <div class="roster_cost" value="{{ roster.total_cost }}">Roster points: {{ roster.total_cost }}</div>
-        <div class="roster_max_cost" value="{{ roster.max_cost }}">Roster max points: {{ roster.max_cost }}</div>
-        <div class="points_left">Points left: </div>
-        --------------------------------------------------------
+    <div class="d-flex justify-content-center head_statistic text-center mb-3 bg-secondary">
+        <div class="m-3 model_bgr rounded p-3">
+            <h2>{{ roster.name }}</h2>
+            <div class="text_form_start">
+                <span class="fst-italic">Roster description: </span>{{ roster.description }}
+            </div>
+            <div>
+                <span>
+                    <span class="fst-italic">Roster points: </span>
+                    <span class="roster_points">{{ roster.total_cost }}</span>
+                </span> |
+                <span class="roster_max_cost" value="{{ roster.max_cost }}">
+                    <span class="fst-italic">Roster max points: </span>
+                    <span>{{ roster.max_cost }}</span>
+                </span>
+            </div>
+            <div class="points_left">Points left: </div>
+        </div>
     </div>
+
     <div>
         <div>
             <table class=" border-darktable table-bordered table-sm">
@@ -76,28 +88,37 @@
                         <td class="result_h_support"></td>
                         <td class="result_l_o_w"></td>
                     </tr>
+                    <tr class="text-center">
+                        <td class="roster_det_hq"></td>
+                        <td class="roster_det_troops"></td>
+                        <td class="roster_det_elites"></td>
+                        <td class="roster_det_f_attack"></td>
+                        <td class="roster_det_flyers"></td>
+                        <td class="roster_det_h_support"></td>
+                        <td class="roster_det_l_o_w"></td>
+                    </tr>
                 </table>
             </div>
         </div>
     </div>
     <div class="d-flex justify-content-center mt-3">
         <div class="d-flex">
-            <div class="border border-dark border-3">
+            <div class="border border-dark border-3 all_hq_units">
                 <h4 class="p-2 text-center">HQ</h4>
                 <div class="d-flex flex-column">
                     {% for unit_entry in units_list %}
                         {% if unit_entry.unit.battlefield_role.name == 'HQ' %}
-                            <a href="#{{ unit_entry.position_number }}{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline">{{ unit_entry.unit.name }}</a>
+                            <a href="#{{ unit_entry.position_number }}{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
                         {% endif %}
                     {% endfor %}
                 </div>
             </div>
-            <div class="border border-dark border-3">
+            <div class="border border-dark border-3 all_troops_units">
                 <h4 class="p-2 text-center">Troops</h4>
                 <div class="d-flex flex-column">
                     {% for unit_entry in units_list %}
                         {% if unit_entry.unit.battlefield_role.name == 'Troops' %}
-                            <a href="#{{ unit_entry.position_number }}{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline">{{ unit_entry.unit.name }}</a>
+                            <a href="#{{ unit_entry.position_number }}{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
                         {% endif %}
                     {% endfor %}
                 </div>
@@ -112,52 +133,52 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="border border-dark border-3">
+            <div class="border border-dark border-3 all_elites_units">
                 <h4 class="p-2 text-center">Elites</h4>
                 <div class="d-flex flex-column">
                     {% for unit_entry in units_list %}
                         {% if unit_entry.unit.battlefield_role.name == 'Elites' %}
-                            <a href="#{{ unit_entry.position_number }}{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline">{{ unit_entry.unit.name }}</a>
+                            <a href="#{{ unit_entry.position_number }}{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
                         {% endif %}
                     {% endfor %}
                 </div>
             </div>
-            <div class="border border-dark border-3">
+            <div class="border border-dark border-3 all_f_attack_units">
                 <h4 class="p-2 text-center">Fast attack</h4>
                 <div class="d-flex flex-column">
                     {% for unit_entry in units_list %}
                         {% if unit_entry.unit.battlefield_role.name == 'Fast attack' %}
-                            <a href="#{{ unit_entry.position_number }}{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline">{{ unit_entry.unit.name }}</a>
+                            <a href="#{{ unit_entry.position_number }}{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
                         {% endif %}
                     {% endfor %}
                 </div>
             </div>
-            <div class="border border-dark border-3">
+            <div class="border border-dark border-3 all_flyers_units">
                 <h4 class="p-2 text-center">Flyers</h4>
                 <div class="d-flex flex-column">
                     {% for unit_entry in units_list %}
                         {% if unit_entry.unit.battlefield_role.name == 'Flyers' %}
-                            <a href="#{{ unit_entry.position_number }}{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline">{{ unit_entry.unit.name }}</a>
+                            <a href="#{{ unit_entry.position_number }}{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
                         {% endif %}
                     {% endfor %}
                 </div>
             </div>
-            <div class="border border-dark border-3">
+            <div class="border border-dark border-3 all_h_support_units">
                 <h4 class="p-2 text-center">Heavy support</h4>
                 <div class="d-flex flex-column">
                     {% for unit_entry in units_list %}
                         {% if unit_entry.unit.battlefield_role.name == 'Heavy support' %}
-                            <a href="#{{ unit_entry.position_number }}{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline">{{ unit_entry.unit.name }}</a>
+                            <a href="#{{ unit_entry.position_number }}{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
                         {% endif %}
                     {% endfor %}
                 </div>
             </div>
-            <div class="border border-dark border-3">
+            <div class="border border-dark border-3 all_l_o_w_units">
                 <h4 class="p-2 text-center">Lords of war</h4>
                 <div class="d-flex flex-column">
                     {% for unit_entry in units_list %}
                         {% if unit_entry.unit.battlefield_role.name == 'Lords of war' %}
-                            <a href="#{{ unit_entry.position_number }}{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline">{{ unit_entry.unit.name }}</a>
+                            <a href="#{{ unit_entry.position_number }}{{ unit_entry.unit.name }}" class="bg-secondary text-light p-2 border border-dark link_underline unit_entity_el">{{ unit_entry.unit.name }}</a>
                         {% endif %}
                     {% endfor %}
                 </div>
@@ -290,7 +311,7 @@
                                         <td style="width: 8%">{{ profile.strength }}</td>
                                         <td style="width: 8%">{{ profile.armor_penetration }}</td>
                                         <td style="width: 8%">{{ profile.damage }}</td>
-                                        <td class="ability_field" style="width: 60%">{{ profile.abilities }}</td>
+                                        <td class="text_form_start" style="width: 60%">{{ profile.abilities }}</td>
                                     </tr>
                                 {% endfor %}
                             </table>
@@ -304,7 +325,7 @@
             {% endif %}
             {% if unit_entry.abilities|length != 0 %}
                 <div class="border border-dark bg-light">
-                    <div class="">
+                    <div class="mb-3">
                         <h5 class="text-center mt-1">Abilities</h5>
                         <div class="container p-0">
                         {% for ability in unit_entry.abilities %}

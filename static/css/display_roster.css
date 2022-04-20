@@ -29,6 +29,11 @@
     text-decoration: none;
 }
 
-.ability_field {
+.text_form_start {
     text-align: start
 }
+
+.head_statistic {
+    font-size: 23px;
+}
+
