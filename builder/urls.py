@@ -17,7 +17,7 @@ Including another URLconf
 from django.urls import path
 
 from .views import WorkboardView, RosterListView, DisplayRosterListView, FactionUnitsListView, CreateRosterView, \
-    ManageRosterListView, ManageRosterAJAXView
+    ManageRosterListView
 
 app_name = "builder"
 
@@ -26,7 +26,6 @@ urlpatterns = [
     path("roster_list/", RosterListView.as_view(), name="roster_list"),
     path("display_roster/<int:pk>", DisplayRosterListView.as_view(), name="display_roster"),
     path("manage_roster/<int:pk>", ManageRosterListView.as_view(), name="manage_roster"),
-    path("manage_roster_ajax/<int:pk>", ManageRosterAJAXView.as_view(), name="manage_roster_ajax"),
     path("units_list/", FactionUnitsListView.as_view(), name="units_list"),
     path("units_list/<int:pk>", FactionUnitsListView.as_view(), name="units_list"),
     path("roster_create/", CreateRosterView.as_view(), name="roster_create")

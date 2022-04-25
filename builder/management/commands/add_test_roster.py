@@ -8,7 +8,7 @@ from builder.models import Roster
 class Command(BaseCommand):
 	def handle(self, *args, **options):
 		roster_units_data = {
-			"detachment_data" : [1, 2],
+			"detachment_data": [1, 2],
 			"main_data": [
 				{
 					"position_number": 1,

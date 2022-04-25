@@ -1,5 +1,6 @@
 import json
 from itertools import chain
+from pprint import pprint
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -170,22 +171,14 @@ def get_roster_context(roster):
         unit_obj = Unit.objects \
             .select_related("codex_faction") \
             .get(pk=unit["unit_pk"])
-
         result["unit"] = unit_obj
         result["models"] = extract_models(unit)
         result["weapons"] = extract_weapons(unit, unit_obj)
         result["abilities"] = extract_abilities(unit, unit_obj)
         result["other_wargear"] = extract_other_wargear(unit, unit_obj)
-
         final_data["main_data"].append(result)
-    from pprint import pprint
-    # pprint(final_data, sort_dicts=False)
-
     return final_data
 
-
-
-# Create your views here.
 
 class FactionUnitsListView(ListView):
     template_name = "builder/units_list.html"
@@ -278,6 +271,7 @@ class ManageRosterListView(ListView):
     def get(self, request, *args, **kwargs):
         roster = Roster.objects.get(pk=kwargs["pk"])
         context = get_roster_context(roster)
+
         return render(
             request,
             self.template_name,
@@ -291,10 +285,19 @@ class ManageRosterListView(ListView):
             }
         )
 
-class ManageRosterAJAXView(View):
-    def get(self, request, *args, **kwargs):
-        faction_units = Unit.objects.filter(faction=kwargs["pk"])
-        return JsonResponse({"1": 1})
+    def post(self, request, *args, **kwargs):
+        request_data = json.loads(request.body.decode())
+        pprint(request_data["data"], sort_dicts=False)
+        roster = Roster.objects.get(pk=request_data["roster_id"])
+        roster.roster_data = json.dumps(request_data["data"]).encode()
+        roster.save()
+        return JsonResponse({"status": 200, "text": "OK"})
+
+
+# class ManageRosterAJAXView(View):
+#     def get(self, request, *args, **kwargs):
+#         faction_units = Unit.objects.filter(faction=kwargs["pk"])
+#         return JsonResponse({"1": 1})
 
 
 class CreateRosterView(CreateView):

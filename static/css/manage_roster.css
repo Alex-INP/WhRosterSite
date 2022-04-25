@@ -1,3 +1,10 @@
+.toheader_btn{
+    position: fixed;
+    right: 70px;
+    bottom: 70px;
+    height: 70px;
+    width: 70px;
+}
 .all_detachments_segment {
     position: absolute;
     top: 0px;
@@ -55,5 +62,10 @@
     height: 30px;
     width: 30px;
     margin: 2px;
+}
+
+.unit_element_template {
+    position: relative;
+    display: none;
 }
 
