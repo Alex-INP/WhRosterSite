@@ -209,7 +209,7 @@
                         <button class="save_roster_btn btn btn-lg btn-primary m-3" style="display: block; margin: 0 auto;">Save roster</button>
                     </div>
                     <div>
-                        <button class="delete_roster_btn btn btn-lg btn-danger m-3" style="display: block; margin: 0 auto;">Delete roster</button>
+                        <a type="button" class="delete_roster_btn btn btn-lg btn-danger m-3" style="display: block; margin: 0 auto;" href="{% url 'builder:delete_roster' roster.pk %}">Delete roster</a>
                     </div>
                 </div>
             </div>
@@ -384,11 +384,9 @@
                                                 {% for ability in unit_entry.abilities %}
                                                     <div class="row m-2 p-0 border border-secondary rounded ability_element" ability_id="{{ ability.ability.pk }}">
                                                         {% if ability.ability.price != '0' %}
-                                                            {% if ability.bought %}
-                                                                <div class="col-3 border border-2 border-success rounded" bought="true">{{ ability.ability.name }}</div>
-                                                            {% else %}
-                                                                <div class="col-3 border border-2 border-danger rounded" bought="false">{{ ability.ability.name }}</div>
-                                                            {% endif %}
+
+                                                            <div class="col-3 border border-2 border-danger rounded" bought="false">{{ ability.ability.name }}</div>
+
                                                             <div class="col-1 model_cost a_price">{{ ability.ability.price }}</div>
                                                             <div class="col-1 d-flex flex-column justify-content-center p-0">
                                                                 <button class="ability_btn_plus unit_btn btn-light border border-dark border-1">+</button>

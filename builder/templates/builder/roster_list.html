@@ -26,7 +26,11 @@
                     <b>Factions:</b>
                     {% if roster.factions.all %}
                         {% for faction in roster.factions.all %}
-                            <span>{{ faction.name }} </span>
+                            {% if forloop.last %}
+                                <span>{{ faction.name }}.</span>
+                            {% else %}
+                                <span>{{ faction.name }}, </span>
+                            {% endif %}
                         {% endfor %}
                     {% else %}
                         -
@@ -41,7 +45,7 @@
                     <a type="button" class="col btn btn-primary" href="{% url 'builder:manage_roster' roster.pk %}">Edit roster</a>
                 </div>
                 <div class="p-1">
-                    <a type="button" class="col btn btn-primary" href="">Delete roster</a>
+                    <a type="button" class="col btn btn-primary" href="{% url 'builder:delete_roster' roster.pk %}">Delete roster</a>
                 </div>
             </div>
         </div>

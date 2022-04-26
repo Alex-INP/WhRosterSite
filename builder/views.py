@@ -1,85 +1,82 @@
 import json
-from itertools import chain
-from pprint import pprint
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views import View
 from django.views.generic.list import ListView
-from django.views.generic.edit import UpdateView, CreateView
+from django.views.generic.edit import CreateView, DeleteView
 from django.http import JsonResponse
 from django.db.models import Q
 from django.db import connection
 
-from .models import Roster, Unit, UnitModel, UnitsCountRestrictions, CodexFaction, Ability, OtherWargear, Weapon, \
-    UnitModelProfile, WeaponProfile, Detachment
+from .models import Roster, Unit, UnitsCountRestrictions, CodexFaction,  Weapon, UnitModelProfile, WeaponProfile, Detachment
 from .forms import NewRosterForm
 from users.models import NormalUser
 
 
-def get_all_units_data(faction_id):
-    all_units = Unit.objects.filter(codex_faction=faction_id)
+def get_all_units_data(faction_ids):
     final_data = []
-    for unit in all_units:
-        result = {
-            "unit": unit,
-            "models": None,
-            "weapons": None,
-            "abilities": None,
-            "other_wargear": None,
-        }
+    for faction_id in faction_ids:
+        all_units = Unit.objects.filter(codex_faction=faction_id)
+        for unit in all_units:
+            result = {
+                "unit": unit,
+                "models": None,
+                "weapons": None,
+                "abilities": None,
+                "other_wargear": None,
+            }
 
-        restrictions = UnitsCountRestrictions.objects.select_related("unit").select_related("unit_model").filter(
-            unit=unit.pk)
-        all_models = []
-        for restr in restrictions:
-            all_models.append(
-                {
-                    "model": restr.unit_model,
-                    "profiles": sorted(UnitModelProfile.objects.filter(unit_model=restr.unit_model),
-                                       key=lambda el: el.position),
-                    "count": 0,
-                    "count_restrictions": {"min": restr.minimum_count, "max": restr.maximum_count}
-                }
-            )
-        result["models"] = all_models
-
-        all_weapons = []
-        weapons = Weapon.objects.filter(u_weapon=unit)
-        for weapon in weapons:
-                all_weapons.append(
+            restrictions = UnitsCountRestrictions.objects.select_related("unit").select_related("unit_model").filter(
+                unit=unit.pk)
+            all_models = []
+            for restr in restrictions:
+                all_models.append(
                     {
-                        "weapon": weapon,
-                        "profiles": WeaponProfile.objects.filter(weapon=weapon),
+                        "model": restr.unit_model,
+                        "profiles": sorted(UnitModelProfile.objects.filter(unit_model=restr.unit_model),
+                                           key=lambda el: el.position),
                         "count": 0,
+                        "count_restrictions": {"min": restr.minimum_count, "max": restr.maximum_count}
                     }
                 )
-        result["weapons"] = all_weapons
+            result["models"] = all_models
 
-        all_abilities = []
-        abilities = unit.abilities.all()
-        for ability in abilities:
-            all_abilities.append(
-                {
-                    "ability": ability,
-                    "bought": True
-                }
-            )
-        result["abilities"] = all_abilities
+            all_weapons = []
+            weapons = Weapon.objects.filter(u_weapon=unit)
+            for weapon in weapons:
+                    all_weapons.append(
+                        {
+                            "weapon": weapon,
+                            "profiles": WeaponProfile.objects.filter(weapon=weapon),
+                            "count": 0,
+                        }
+                    )
+            result["weapons"] = all_weapons
 
-        all_wargear = []
-        wargear = unit.other_wargear.all()
-        for wgr in wargear:
-            all_wargear.append(
-                {
-                    "wargear": wgr,
-                    "count": 0
-                }
-            )
-        result["other_wargear"] = all_wargear
+            all_abilities = []
+            abilities = unit.abilities.all()
+            for ability in abilities:
+                all_abilities.append(
+                    {
+                        "ability": ability,
+                        "bought": True
+                    }
+                )
+            result["abilities"] = all_abilities
 
-        final_data.append(result)
+            all_wargear = []
+            wargear = unit.other_wargear.all()
+            for wgr in wargear:
+                all_wargear.append(
+                    {
+                        "wargear": wgr,
+                        "count": 0
+                    }
+                )
+            result["other_wargear"] = all_wargear
+
+            final_data.append(result)
     return final_data
 
 
@@ -106,7 +103,7 @@ def extract_models(unit_dict):
 
 def extract_weapons(unit_dict, unit_obj):
     all_weapons = []
-    weapons = Weapon.objects.filter(u_weapon=unit_obj) #unit_obj.u_weapon.all()
+    weapons = Weapon.objects.filter(u_weapon=unit_obj)
 
     # ПРОТЕСТИРОВАТЬ СОКРАЩЕНИЕ КОЛ-ВА ЗАПРОСОВ
     # weapons = Weapon.objects.prefetch_related("wp_weapon").filter(u_weapon=unit_obj)
@@ -212,31 +209,6 @@ class FactionUnitsListView(ListView):
             request, self.template_name, {
                 "all_units": all_units, "factions": all_factions})
 
-class WorkboardView(UpdateView):
-    template_name = "builder/workboard.html"
-    model = Roster
-
-    def get(self, request, *args, **kwargs):
-        # if roster_pk := kwargs["pk"]:
-        #     self.object = Roster.objects.get(pk=roster_pk)
-        return render(request, self.template_name)
-
-
-
-# class BuilderListView(ListView):
-#     template_name = "builder/workboard.html"
-#
-#     def get_queryset(self):
-#         roster = Roster.objects.get(pk=1)
-#         unit_entries = UnitsInRosters.objects.filter(
-#             roster=roster).select_related("unit")
-#
-#         count_restrictions = {}
-#         return {
-#             "roster": roster,
-#             "unit_entries": unit_entries,
-#             "count_restrictions": count_restrictions}
-
 
 class RosterListView(ListView):
     template_name = "builder/roster_list.html"
@@ -276,7 +248,7 @@ class ManageRosterListView(ListView):
             request,
             self.template_name,
             {
-                "all_faction_units": get_all_units_data(1), #Unit.objects.filter(codex_faction=1),
+                "all_faction_units": get_all_units_data([faction.id for faction in roster.factions.all()]), #Unit.objects.filter(codex_faction=1),
                 "roster": roster,
                 "detachments": context["detachment_data"],
                 "units_list": sorted(context["main_data"], key=lambda x: x["position_number"]),
@@ -287,17 +259,12 @@ class ManageRosterListView(ListView):
 
     def post(self, request, *args, **kwargs):
         request_data = json.loads(request.body.decode())
-        pprint(request_data["data"], sort_dicts=False)
+        total_cost = request_data.pop("total_cost")
         roster = Roster.objects.get(pk=request_data["roster_id"])
+        roster.total_cost = total_cost
         roster.roster_data = json.dumps(request_data["data"]).encode()
         roster.save()
         return JsonResponse({"status": 200, "text": "OK"})
-
-
-# class ManageRosterAJAXView(View):
-#     def get(self, request, *args, **kwargs):
-#         faction_units = Unit.objects.filter(faction=kwargs["pk"])
-#         return JsonResponse({"1": 1})
 
 
 class CreateRosterView(CreateView):
@@ -306,11 +273,29 @@ class CreateRosterView(CreateView):
     form_class = NewRosterForm
     success_url = "builder:roster_list"
 
+    def get_context_data(self, **kwargs):
+        return {"factions": CodexFaction.objects.all(), "form": self.form_class}
+
     def post(self, request, *args, **kwargs):
         form = self.get_form()
+
         if form.is_valid():
+            factions_ids = form.cleaned_data.get("factions")
             form_obj = form.save(commit=False)
             form_obj.user = NormalUser.objects.get(pk=request.user.pk)
             form_obj.save()
+
+            for i in factions_ids:
+                form_obj.factions.add(CodexFaction.objects.get(pk=i))
+
         return HttpResponseRedirect(reverse_lazy(self.success_url))
+
+
+class RosterDeleteView(DeleteView):
+    success_url = reverse_lazy("builder:roster_list")
+
+    def get(self, request, *args, **kwargs):
+        Roster.objects.get(pk=kwargs["pk"]).delete()
+        return HttpResponseRedirect(self.success_url)
+
 

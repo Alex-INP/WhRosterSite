@@ -1,11 +1,10 @@
-import argparse
 import json
 
 from django.core.management.base import BaseCommand
 
 from builder.models import Weapon, WeaponProfile, Ability, Keyword, FactionKeyword, Unit, UnitModel, UnitModelProfile, \
 	OtherWargear, UnitsCountRestrictions, CodexFaction, BattlefieldRole
-from users.models import NormalUser
+
 
 def fill_simple_table(model, all_data):
 	for data in all_data:

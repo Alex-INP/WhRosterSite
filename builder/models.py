@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 
 from users.models import NormalUser
@@ -110,13 +112,6 @@ class UnitModelProfile(models.Model):
 	base = models.CharField("base", blank=True, max_length=50)
 	unit_model = models.ForeignKey(UnitModel, on_delete=models.CASCADE, verbose_name="unit", related_name="ump_unit")
 
-
-# class OtherWargearInUnits(models.Model):
-# 	unit = models.ForeignKey(Unit, on_delete=models.CASCADE, verbose_name="unit", related_name="owiu_unit")
-# 	wargear = models.ForeignKey(OtherWargear, on_delete=models.CASCADE, verbose_name="wargear", related_name="owiu_wargear")
-# 	cost = models.PositiveIntegerField("wargear cost", default=0)
-
-
 class Roster(models.Model):
 	name = models.CharField("unit name", max_length=250)
 	user = models.ForeignKey(NormalUser, on_delete=models.CASCADE, verbose_name="user")
@@ -125,44 +120,10 @@ class Roster(models.Model):
 	max_cost = models.PositiveIntegerField("maximum roster cost", default=1500)
 	factions = models.ManyToManyField(CodexFaction, verbose_name="factions", related_name="factions")
 	private = models.BooleanField(default=False)
-	roster_data = models.BinaryField(verbose_name="roster data", null=True)
+	roster_data = models.BinaryField(verbose_name="roster data", null=True, default=json.dumps({"detachment_data": [], "main_data": []}).encode())
 
 	def __str__(self):
 		return self.name
-
-
-# class UnitsInRosters(models.Model):
-# 	roster = models.ForeignKey(Roster, on_delete=models.CASCADE, related_name="roster")
-# 	unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name="roster_unit")
-# 	unit_model = models.ForeignKey(UnitModel, on_delete=models.CASCADE, related_name="roster_unit_model")
-# 	model_count = models.PositiveIntegerField("model count", default=0)
-		# total_cost = models.PositiveIntegerField("total unit cost", default=0)
-
-	# def __str__(self):
-	# 	return f"{self.unit.name} in {self.roster.name}"
-
-
-# class ModelsInRosterUnits(models.Model):
-# 	roster_unit = models.ForeignKey(UnitsInRosters, on_delete=models.CASCADE, related_name="miru_roster_unit")
-# 	unit_model = models.ForeignKey(UnitModel, on_delete=models.CASCADE, related_name="miru_roster_unit_model")
-# 	model_count = models.PositiveIntegerField("model count", default=0)
-#
-# 	def get_restrictions(self):
-# 		restrictions = UnitsCountRestrictions.objects.get(unit=self.roster_unit, unit_model=self.unit_model)
-# 		return f"{restrictions.minimum_count} - {restrictions.maximum_count}"
-
-# class WeaponInRosterUnits(models.Model):
-# 	roster_unit = models.ForeignKey(UnitsInRosters, on_delete=models.CASCADE, related_name="roster_unit")
-# 	weapon = models.ForeignKey(Weapon, on_delete=models.CASCADE, related_name="roster_unit_weapon")
-# 	count = models.PositiveIntegerField("count", default=0)
-		# total_cost = models.PositiveIntegerField("total weapon cost", default=0)
-
-
-# class OtherWargearInRosterUnits(models.Model):
-# 	roster_unit = models.ForeignKey(UnitsInRosters, on_delete=models.CASCADE, related_name="owiru_roster_unit")
-# 	wargear = models.ForeignKey(OtherWargear, on_delete=models.CASCADE, verbose_name="wargear", related_name="owiru_wargear")
-# 	count = models.PositiveIntegerField("count", default=0)
-	# total_cost = models.PositiveIntegerField("total weapon cost", default=0)
 
 
 class UnitsCountRestrictions(models.Model):

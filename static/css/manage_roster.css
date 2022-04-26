@@ -4,6 +4,7 @@
     bottom: 70px;
     height: 70px;
     width: 70px;
+    z-index: 3;
 }
 .all_detachments_segment {
     position: absolute;

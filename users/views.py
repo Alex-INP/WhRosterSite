@@ -2,9 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import View, UpdateView, CreateView
 from django.contrib.auth.views import LoginView
-from django.views.generic.list import ListView
 from django.contrib import auth
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import UserLoginForm, UserUpdateForm, UserCreateForm
@@ -55,7 +53,6 @@ class UserRegisterView(CreateView):
 	model = NormalUser
 	template_name = "users/register.html"
 	form_class = UserCreateForm
-	# success_url = reverse("users:profile")
 
 	def get_success_url(self):
 		return reverse_lazy("users:profile")

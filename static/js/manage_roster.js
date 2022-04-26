@@ -2,6 +2,7 @@
 
 $(".save_response_element").hide()
 
+
 function total_recalc(){
     for (let unit_el of document.querySelectorAll(".unit_element")) {
         calc_unit_cost(unit_el)
@@ -114,6 +115,33 @@ $(".add_new_detachment_btn").click(function(){
     all_detachments_el.show()
 })
 
+function checkDetachmentCountColor() {
+    let selectors = [
+        [".result_hq", ".roster_det_hq"],
+        [".result_troops", ".roster_det_troops"],
+        [".result_elites", ".roster_det_elites"],
+        [".result_f_attack", ".roster_det_f_attack"],
+        [".result_flyers", ".roster_det_flyers"],
+        [".result_h_support", ".roster_det_h_support"],
+        [".result_l_o_w", ".roster_det_l_o_w"]
+    ]
+    for(let i of selectors) {
+        let restrictions_el = $(i[0])
+        let current_el = $(i[1])
+        let current_count = parseInt(current_el.text())
+
+        let splitted_txt = restrictions_el.text().split("-")
+        let min = parseInt(splitted_txt[0])
+        let max = parseInt(splitted_txt[1])
+        if (min > current_count || current_count > max) {
+            current_el.removeClass("text-primary")
+            current_el.addClass("text-danger fw-bold")
+        } else {
+            current_el.removeClass("text-danger fw-bold")
+            current_el.addClass("text-primary")
+        }
+    }
+}
 
 class UserDetachments{
     constructor(){
@@ -128,10 +156,12 @@ class UserDetachments{
 
     add_detach_id(id){
         this.detachments_id.push(id)
+        calc_detachment_restrictions()
     }
 
     delete_detach_id(id){
         this.detachments_id.splice(this.detachments_id.indexOf(id), 1)
+        calc_detachment_restrictions()
     }
 }
 
@@ -174,27 +204,6 @@ for(let el of $(".faction_id").text()){
 
 //---------------------------------------------
 
-//class Unit{
-//    constructor(id){
-//    //position_number
-//    this.unit_pk = id
-//    this.models = [{"model_pk": 1, "model_count": 1}]
-//    this.weapon = [{"weapon_pk": 1, "weapon_count": 1}]
-//    this.abilities = [{"ability_pk": 1, "bought": true}]
-//    this.other_wargear = [{"wargear_pk": 1, "bought": true}]
-//    }
-//}
-
-class Unit{
-    constructor(id){
-    this.unit_pk = id
-    this.models = []
-    this.weapon = []
-    this.abilities = []
-    this.other_wargear = []
-    }
-}
-
 let last_observed = null
 $(".observe_unit").click(function(){
     let target_id = $(this).attr("observe_id")
@@ -227,18 +236,6 @@ $(".new_roster_unit_btn").click(function(){
         }
     }
 )
-//for(let el of factions_id){
-//        $.ajax({
-//        url: `http://127.0.0.1:8000/builder/manage_roster_ajax/${el}`,
-//        headers: {
-//            "ajax_request": "true"
-//        },
-//        type: "GET",
-//        success: function(data){
-//            console.log(data);
-//        }
-//    })
-//}
 
 window.onscroll = function(){checkSideMenu()}
 
@@ -307,8 +304,23 @@ ability_btn_plus_els.click(buy_ability)
 function buy_ability(){
     let ability_row_el = $(this).parents(".ability_element")
     let ability_bought_el = ability_row_el.find("[bought]")
-}
 
+    if(ability_bought_el.attr("bought") == "true") {
+        ability_bought_el.attr("bought", "false")
+
+        ability_bought_el.removeClass("border-success")
+        ability_bought_el.addClass("border-danger")
+
+        total_recalc()
+    } else {
+        ability_bought_el.attr("bought", "true")
+
+        ability_bought_el.removeClass("border-danger")
+        ability_bought_el.addClass("border-success")
+
+        total_recalc()
+    }
+}
 
 const wargear_btn_plus_els = $(".wargear_btn_plus")
 wargear_btn_plus_els.click(buy_wargear)
@@ -349,6 +361,8 @@ function delete_unit_event(){
     unit_to_delete_el.remove()
     menu_els.remove()
     total_recalc()
+    calc_detachment_restrictions()
+    checkDetachmentCountColor()
 }
 
 function reposition_upon_delete(delete_position){
@@ -437,6 +451,8 @@ $(".add_new_unit_btn").click(function(){
         add_el_top_menu(new_id, unit_name, role_name)
         add_el_docked_menu(new_id, unit_name, role_name)
         rebind_unit_eventHandlers()
+        calc_detachment_restrictions()
+        checkDetachmentCountColor()
     }
 )
 
@@ -556,8 +572,6 @@ function element_reposition(){
         change_unit_signature(target_unit_el, "down")
         change_unit_signature(other_unit_el, "up")
     }
-
-    console.log("trig")
 }
 
 $(".save_roster_btn").click(function(){
@@ -606,6 +620,7 @@ function get_csrf(){
 function collect_send_data(){
     let result = {
         roster_id: null,
+        total_cost: parseInt($(".roster_points").text()),
         data: {
             detachment_data: [],
             main_data: []
@@ -649,10 +664,10 @@ function collect_send_data(){
         for(let ability of abilities_els) {
             ability = $(ability)
             let bought = ability.find("[bought]").attr("bought")
-            if(bought == "undefined" || "true") {
-                bought = true
-            } else if(bought == "false"){
+            if (bought == "false") {
                 bought = false
+            } else {
+                bought = true
             }
 
             let abilities_data = {
@@ -661,9 +676,6 @@ function collect_send_data(){
             }
 
             unit_data.abilities.push(abilities_data)
-//            if(Object.keys(abilities_data).length === 0){
-//                unit_data.abilities.push(abilities_data)
-//            }
         }
 
         let other_wargear_els = unit_el.find(".wargear_element")
@@ -676,7 +688,6 @@ function collect_send_data(){
         }
         result.data.main_data.push(unit_data)
     }
-    console.log(result)
     return result
 }
 
